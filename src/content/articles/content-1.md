@@ -2,6 +2,7 @@
 title: "Astroの始め方"
 description: "Astroフレームワークの基本的な使い方と特徴について解説します。"
 pubDate: 2024-03-20
+id: content-1
 ---
 
 # Astroの始め方

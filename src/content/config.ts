@@ -8,6 +8,7 @@ const articles = defineCollection({
     pubDate: z.date(),
     updatedDate: z.date().optional(),
     heroImage: z.string().optional(),
+    id: z.string(),
   }),
 });
 

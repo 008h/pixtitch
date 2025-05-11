@@ -9,6 +9,10 @@ interface Props {
 
 const { article, prevArticle, nextArticle } = Astro.props;
 const { Content } = await article.render();
+
+// SVGファイルのパスを生成
+const pixelSvgPath = `/assets/${article.data.id}_pixel.svg`;
+const patternSvgPath = `/assets/${article.data.id}_pattern.svg`;
 ---
 
 <article>
@@ -17,12 +21,18 @@ const { Content } = await article.render();
     <p>
       {article.data.pubDate.toLocaleDateString('ja-JP')}
     </p>
-    {article.data.heroImage && (
+    <div class="flex gap-4 my-4">
       <img
-        src={article.data.heroImage}
-        alt={article.data.title}
+        src={pixelSvgPath}
+        alt={`${article.data.title} pixel art`}
+        class="w-32 h-32"
       />
-    )}
+      <img
+        src={patternSvgPath}
+        alt={`${article.data.title} pattern`}
+        class="w-32 h-32"
+      />
+    </div>
   </header>
 
   <div>

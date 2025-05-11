@@ -2,6 +2,7 @@
 title: "Astroのコンポーネント"
 description: "Astroのコンポーネントシステムについて、その特徴と使い方を解説します。"
 pubDate: 2024-03-18
+id: content-3
 ---
 
 # Astroのコンポーネント

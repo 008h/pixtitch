@@ -2,6 +2,7 @@
 title: "Astroのルーティング"
 description: "Astroのファイルベースのルーティングシステムについて解説します。"
 pubDate: 2024-03-17
+id: content-4
 ---
 
 # Astroのルーティング

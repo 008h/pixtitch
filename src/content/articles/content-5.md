@@ -2,6 +2,7 @@
 title: "Astroのデプロイ"
 description: "Astroプロジェクトのデプロイ方法と、主要なホスティングサービスの設定について解説します。"
 pubDate: 2024-03-16
+id: content-5
 ---
 
 # Astroのデプロイ
