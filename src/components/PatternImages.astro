@@ -2,9 +2,10 @@
 interface Props {
   baseName: string;
   title: string;
+  enableSwitching?: boolean;
 }
 
-const { baseName, title } = Astro.props;
+const { baseName, title, enableSwitching = true } = Astro.props;
 
 // SVGファイルのパスを生成
 const pixelSvgPath = `/assets/${baseName}_pixel.svg`;
@@ -12,7 +13,7 @@ const pixelWithGridSvgPath = `/assets/${baseName}_pixel-with-grid.svg`;
 const patternSvgPath = `/assets/${baseName}_pattern.svg`;
 ---
 
-<div class="pattern-container">
+<div class="pattern-container" data-enable-switching={enableSwitching}>
   <img
     src={pixelSvgPath}
     alt={`${title} pixel art`}
@@ -40,22 +41,27 @@ const patternSvgPath = `/assets/${baseName}_pattern.svg`;
 
   // クリックイベントの設定
   document.querySelectorAll('.pattern-container').forEach((container) => {
-    container.addEventListener('click', () => {
-      // 現在のタイプのインデックスを取得
-      const currentIndex = types.indexOf(currentType);
-      // 次のタイプを計算（最後の場合は最初に戻る）
-      const nextIndex = (currentIndex + 1) % types.length;
-      currentType = types[nextIndex];
+    const enableSwitching = container.getAttribute('data-enable-switching') === 'true';
+    
+    if (enableSwitching) {
+      (container as HTMLElement).style.cursor = 'pointer';
+      container.addEventListener('click', () => {
+        // 現在のタイプのインデックスを取得
+        const currentIndex = types.indexOf(currentType);
+        // 次のタイプを計算（最後の場合は最初に戻る）
+        const nextIndex = (currentIndex + 1) % types.length;
+        currentType = types[nextIndex];
 
-      // すべての画像を非表示にしてから、現在のタイプの画像のみを表示
-      const images = container.querySelectorAll('img[data-pattern-type]');
-      images.forEach((img) => {
-        if (img.getAttribute('data-pattern-type') === currentType) {
-          img.classList.remove('hidden');
-        } else {
-          img.classList.add('hidden');
-        }
+        // すべての画像を非表示にしてから、現在のタイプの画像のみを表示
+        const images = container.querySelectorAll('img[data-pattern-type]');
+        images.forEach((img) => {
+          if (img.getAttribute('data-pattern-type') === currentType) {
+            img.classList.remove('hidden');
+          } else {
+            img.classList.add('hidden');
+          }
+        });
       });
-    });
+    }
   });
 </script>

@@ -1,3 +1,12 @@
+---
+interface Props {
+  showDescription?: boolean;
+  title?: string;
+}
+
+const { showDescription = false, title } = Astro.props;
+---
+
 <header class="sticky top-0">
     <div>
       <h1>
@@ -5,6 +14,15 @@
           Pixtitch
         </a>
       </h1>
+      {title && (
+        <h2 class="text-lg font-medium text-gray-600">
+          {title}
+        </h2>
+      )}
     </div>
-    <p>pixtitch is an ongoing project by Hiroshi Ohba, exploring the intersection of pixel art and embroidery.</p>
+    {showDescription && (
+      <p>
+        pixtitch is an ongoing project by Hiroshi Ohba, exploring the intersection of pixel art and embroidery.
+      </p>
+    )}
 </header>

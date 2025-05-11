@@ -25,7 +25,7 @@ const patternSvgPath = `/assets/${baseName}_pattern.svg`;
     <p>
       {article.data.pubDate.toLocaleDateString('ja-JP')}
     </p>
-    <PatternImages baseName={baseName} title={article.data.title} />
+    <PatternImages baseName={baseName} title={article.data.title} enableSwitching={true} />
   </header>
 
   <div>
