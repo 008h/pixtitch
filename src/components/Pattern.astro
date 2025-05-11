@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import PatternImages from './PatternImages.astro';
 
 interface Props {
   article: CollectionEntry<'articles'>;
@@ -10,9 +11,12 @@ interface Props {
 const { article, prevArticle, nextArticle } = Astro.props;
 const { Content } = await article.render();
 
+// ファイル名から.mdを除去
+const baseName = article.id.replace('.md', '');
+
 // SVGファイルのパスを生成
-const pixelSvgPath = `/assets/${article.data.id}_pixel.svg`;
-const patternSvgPath = `/assets/${article.data.id}_pattern.svg`;
+const pixelSvgPath = `/assets/${baseName}_pixel.svg`;
+const patternSvgPath = `/assets/${baseName}_pattern.svg`;
 ---
 
 <article>
@@ -21,18 +25,7 @@ const patternSvgPath = `/assets/${article.data.id}_pattern.svg`;
     <p>
       {article.data.pubDate.toLocaleDateString('ja-JP')}
     </p>
-    <div class="flex gap-4 my-4">
-      <img
-        src={pixelSvgPath}
-        alt={`${article.data.title} pixel art`}
-        class="w-32 h-32"
-      />
-      <img
-        src={patternSvgPath}
-        alt={`${article.data.title} pattern`}
-        class="w-32 h-32"
-      />
-    </div>
+    <PatternImages baseName={baseName} title={article.data.title} />
   </header>
 
   <div>

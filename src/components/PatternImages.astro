@@ -1,0 +1,25 @@
+---
+interface Props {
+  baseName: string;
+  title: string;
+}
+
+const { baseName, title } = Astro.props;
+
+// SVGファイルのパスを生成
+const pixelSvgPath = `/assets/${baseName}_pixel.svg`;
+const patternSvgPath = `/assets/${baseName}_pattern.svg`;
+---
+
+<div class="flex gap-4 my-4">
+  <img
+    src={pixelSvgPath}
+    alt={`${title} pixel art`}
+    class="w-32 h-32"
+  />
+  <img
+    src={patternSvgPath}
+    alt={`${title} pattern`}
+    class="w-32 h-32"
+  />
+</div> 

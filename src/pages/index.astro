@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import PatternImages from '../components/PatternImages.astro';
 
 const articles = await getCollection('articles');
 // IDの数字部分でソート
@@ -11,23 +12,26 @@ const sortedArticles = articles.sort((a, b) => {
 });
 ---
 
-<Layout title="記事一覧">
+<Layout title="Welcome to Astro.">
   <main>
-    <h1>記事一覧</h1>
-    <div>
-      {sortedArticles.map((article) => (
-        <article>
+    <h1>Welcome to <span class="text-gradient">Astro</span></h1>
+    <p class="instructions">
+      To get started, open the directory <code class="astro-code">src/pages/</code> in your project.<br />
+      <strong>Code Challenge:</strong> Tweak the "Welcome to Astro" heading above.
+    </p>
+
+    <ul class="link-card-grid">
+      {articles.map((article) => (
+        <li class="link-card">
           <h2>
             <a href={`/${article.id.replace('.md', '')}`}>
               {article.data.title}
             </a>
           </h2>
-          <p>
-            {article.data.pubDate.toLocaleDateString('ja-JP')}
-          </p>
           <p>{article.data.description}</p>
-        </article>
+          <PatternImages baseName={article.id.replace('.md', '')} title={article.data.title} />
+        </li>
       ))}
-    </div>
+    </ul>
   </main>
 </Layout>
