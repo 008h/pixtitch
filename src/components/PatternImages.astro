@@ -15,13 +15,13 @@ const patternSvgPath = `/assets/${baseName}_pattern.svg`;
   <img
     src={pixelSvgPath}
     alt={`${title} pixel art`}
-    class="w-32 h-32"
+    class="w-full h-auto"
     data-pattern-type="pixel"
   />
   <img
     src={patternSvgPath}
     alt={`${title} pattern`}
-    class="w-32 h-32 hidden"
+    class="w-full h-auto hidden"
     data-pattern-type="pattern"
   />
 </div>
@@ -45,16 +45,3 @@ const patternSvgPath = `/assets/${baseName}_pattern.svg`;
     });
   });
 </script>
-
-<style>
-  .pattern-container {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  .pattern-container:hover {
-    transform: scale(1.05);
-  }
-  .hidden {
-    display: none;
-  }
-</style> 
