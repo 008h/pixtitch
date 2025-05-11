@@ -11,15 +11,50 @@ const pixelSvgPath = `/assets/${baseName}_pixel.svg`;
 const patternSvgPath = `/assets/${baseName}_pattern.svg`;
 ---
 
-<div class="flex gap-4 my-4">
+<div class="pattern-container">
   <img
     src={pixelSvgPath}
     alt={`${title} pixel art`}
     class="w-32 h-32"
+    data-pattern-type="pixel"
   />
   <img
     src={patternSvgPath}
     alt={`${title} pattern`}
-    class="w-32 h-32"
+    class="w-32 h-32 hidden"
+    data-pattern-type="pattern"
   />
-</div> 
+</div>
+
+<script>
+  // 各コンポーネントで独立して状態を管理
+  let isPixel = true;
+
+  // クリックイベントの設定
+  document.querySelectorAll('.pattern-container').forEach((container) => {
+    container.addEventListener('click', () => {
+      isPixel = !isPixel;
+      const images = container.querySelectorAll('img[data-pattern-type]');
+      images.forEach((img) => {
+        if (img.getAttribute('data-pattern-type') === (isPixel ? 'pixel' : 'pattern')) {
+          img.classList.remove('hidden');
+        } else {
+          img.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .pattern-container {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .pattern-container:hover {
+    transform: scale(1.05);
+  }
+  .hidden {
+    display: none;
+  }
+</style> 
