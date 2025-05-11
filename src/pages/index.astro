@@ -5,8 +5,8 @@ import Layout from '../layouts/Layout.astro';
 const articles = await getCollection('articles');
 // IDの数字部分でソート
 const sortedArticles = articles.sort((a, b) => {
-  const aNum = parseInt(a.id.replace('content-', '').replace('.md', ''));
-  const bNum = parseInt(b.id.replace('content-', '').replace('.md', ''));
+  const aNum = Number.parseInt(a.id.replace('content-', '').replace('.md', ''));
+  const bNum = Number.parseInt(b.id.replace('content-', '').replace('.md', ''));
   return aNum - bNum;
 });
 ---
