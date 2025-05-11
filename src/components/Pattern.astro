@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+  prevArticle?: CollectionEntry<'articles'>;
+  nextArticle?: CollectionEntry<'articles'>;
+}
+
+const { article, prevArticle, nextArticle } = Astro.props;
+const { Content } = await article.render();
+---
+
+<article>
+  <header>
+    <h1 class="text-3xl font-bold underline">{article.data.title}</h1>
+    <p>
+      {article.data.pubDate.toLocaleDateString('ja-JP')}
+    </p>
+    {article.data.heroImage && (
+      <img
+        src={article.data.heroImage}
+        alt={article.data.title}
+      />
+    )}
+  </header>
+
+  <div>
+    <Content />
+  </div>
+
+  <nav>
+    <div>
+      {prevArticle && (
+        <a href={`/${prevArticle.id.replace('.md', '')}`}>
+          ← {prevArticle.data.title}
+        </a>
+      )}
+      {nextArticle && (
+        <a href={`/${nextArticle.id.replace('.md', '')}`}>
+          {nextArticle.data.title} →
+        </a>
+      )}
+    </div>
+  </nav>
+</article> 

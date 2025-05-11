@@ -1,16 +1,33 @@
 ---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
 
+const articles = await getCollection('articles');
+// IDの数字部分でソート
+const sortedArticles = articles.sort((a, b) => {
+  const aNum = parseInt(a.id.replace('content-', '').replace('.md', ''));
+  const bNum = parseInt(b.id.replace('content-', '').replace('.md', ''));
+  return aNum - bNum;
+});
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="記事一覧">
+  <main>
+    <h1>記事一覧</h1>
+    <div>
+      {sortedArticles.map((article) => (
+        <article>
+          <h2>
+            <a href={`/${article.id.replace('.md', '')}`}>
+              {article.data.title}
+            </a>
+          </h2>
+          <p>
+            {article.data.pubDate.toLocaleDateString('ja-JP')}
+          </p>
+          <p>{article.data.description}</p>
+        </article>
+      ))}
+    </div>
+  </main>
+</Layout>

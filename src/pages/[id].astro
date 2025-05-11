@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import Pattern from '../components/Pattern.astro';
+import Layout from '../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  // IDの数字部分でソート
+  const sortedArticles = articles.sort((a, b) => {
+    const aNum = parseInt(a.id.replace('content-', '').replace('.md', ''));
+    const bNum = parseInt(b.id.replace('content-', '').replace('.md', ''));
+    return aNum - bNum;
+  });
+  
+  return sortedArticles.map((article, index) => ({
+    params: { id: article.id.replace('.md', '') },
+    props: {
+      article,
+      prevArticle: sortedArticles[index - 1],
+      nextArticle: sortedArticles[index + 1],
+    },
+  }));
+}
+
+const { article, prevArticle, nextArticle } = Astro.props;
+---
+
+<Layout title={article.data.title}>
+  <Pattern
+    article={article}
+    prevArticle={prevArticle}
+    nextArticle={nextArticle}
+  />
+</Layout> 
