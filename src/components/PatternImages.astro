@@ -8,6 +8,7 @@ const { baseName, title } = Astro.props;
 
 // SVGファイルのパスを生成
 const pixelSvgPath = `/assets/${baseName}_pixel.svg`;
+const pixelWithGridSvgPath = `/assets/${baseName}_pixel-with-grid.svg`;
 const patternSvgPath = `/assets/${baseName}_pattern.svg`;
 ---
 
@@ -19,6 +20,12 @@ const patternSvgPath = `/assets/${baseName}_pattern.svg`;
     data-pattern-type="pixel"
   />
   <img
+    src={pixelWithGridSvgPath}
+    alt={`${title} pixel art with grid`}
+    class="w-full h-auto hidden"
+    data-pattern-type="pixel-with-grid"
+  />
+  <img
     src={patternSvgPath}
     alt={`${title} pattern`}
     class="w-full h-auto hidden"
@@ -28,15 +35,22 @@ const patternSvgPath = `/assets/${baseName}_pattern.svg`;
 
 <script>
   // 各コンポーネントで独立して状態を管理
-  let isPixel = true;
+  let currentType = 'pixel';
+  const types = ['pixel', 'pixel-with-grid', 'pattern'];
 
   // クリックイベントの設定
   document.querySelectorAll('.pattern-container').forEach((container) => {
     container.addEventListener('click', () => {
-      isPixel = !isPixel;
+      // 現在のタイプのインデックスを取得
+      const currentIndex = types.indexOf(currentType);
+      // 次のタイプを計算（最後の場合は最初に戻る）
+      const nextIndex = (currentIndex + 1) % types.length;
+      currentType = types[nextIndex];
+
+      // すべての画像を非表示にしてから、現在のタイプの画像のみを表示
       const images = container.querySelectorAll('img[data-pattern-type]');
       images.forEach((img) => {
-        if (img.getAttribute('data-pattern-type') === (isPixel ? 'pixel' : 'pattern')) {
+        if (img.getAttribute('data-pattern-type') === currentType) {
           img.classList.remove('hidden');
         } else {
           img.classList.add('hidden');
