@@ -20,7 +20,7 @@ const sortedArticles = articles.sort((a, b) => {
     <ol>
       {articles.map((article) => (
         <li>
-            <a href={`/${article.id.replace('.md', '')}`}>
+            <a href={`${import.meta.env.BASE_URL}${article.id.replace('.md', '')}`}>
               <PatternImages baseName={article.id.replace('.md', '')} title={article.data.title} enableSwitching={false} />
             </a>
         </li>

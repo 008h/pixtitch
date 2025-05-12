@@ -13,10 +13,6 @@ const { Content } = await article.render();
 
 // ファイル名から.mdを除去
 const baseName = article.id.replace('.md', '');
-
-// SVGファイルのパスを生成
-const pixelSvgPath = `/assets/${baseName}_pixel.svg`;
-const patternSvgPath = `/assets/${baseName}_pattern.svg`;
 ---
 
 <article>
@@ -35,12 +31,12 @@ const patternSvgPath = `/assets/${baseName}_pattern.svg`;
   <nav>
     <div>
       {prevArticle && (
-        <a href={`/${prevArticle.id.replace('.md', '')}`}>
+        <a href={`${import.meta.env.BASE_URL}${prevArticle.id.replace('.md', '')}`}>
           ← {prevArticle.data.title}
         </a>
       )}
       {nextArticle && (
-        <a href={`/${nextArticle.id.replace('.md', '')}`}>
+        <a href={`${import.meta.env.BASE_URL}${nextArticle.id.replace('.md', '')}`}>
           {nextArticle.data.title} →
         </a>
       )}

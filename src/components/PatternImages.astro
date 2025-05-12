@@ -8,9 +8,9 @@ interface Props {
 const { baseName, title, enableSwitching = true } = Astro.props;
 
 // SVGファイルのパスを生成
-const pixelSvgPath = `/assets/${baseName}_pixel.svg`;
-const pixelWithGridSvgPath = `/assets/${baseName}_pixel-with-grid.svg`;
-const patternSvgPath = `/assets/${baseName}_pattern.svg`;
+const pixelSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pixel.svg`;
+const pixelWithGridSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pixel-with-grid.svg`;
+const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.svg`;
 ---
 
 <div class="pattern-container" data-enable-switching={enableSwitching}>
