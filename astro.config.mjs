@@ -7,5 +7,8 @@ export default defineConfig({
   base: "/pixtitch/",
   vite: {
     assetsInclude: ["**/*.svg"],
+    build: {
+      assetsDir: "assets",
+    },
   },
 });
