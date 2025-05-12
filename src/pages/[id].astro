@@ -6,11 +6,9 @@ import Header from '../components/Header.astro'
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles');
-  // IDの数字部分でソート
+  // pubDateでソート
   const sortedArticles = articles.sort((a, b) => {
-    const aNum = parseInt(a.id.replace('content-', '').replace('.md', ''));
-    const bNum = parseInt(b.id.replace('content-', '').replace('.md', ''));
-    return aNum - bNum;
+    return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime();
   });
   
   return sortedArticles.map((article, index) => ({
