@@ -3,9 +3,9 @@ import type { CollectionEntry } from 'astro:content';
 import PatternImages from './PatternImages.astro';
 
 interface Props {
-  article: CollectionEntry<'articles'>;
-  prevArticle?: CollectionEntry<'articles'>;
-  nextArticle?: CollectionEntry<'articles'>;
+  article: CollectionEntry<'patterns'>;
+  prevArticle?: CollectionEntry<'patterns'>;
+  nextArticle?: CollectionEntry<'patterns'>;
 }
 
 const { article, prevArticle, nextArticle } = Astro.props;
