@@ -29,7 +29,13 @@ const formatDate = (date: Date) => {
     <p>
       {formatDate(article.data.pubDate)}
     </p>
-    <PatternImages baseName={baseName} title={article.data.title} enableSwitching={true} />
+    <PatternImages 
+      baseName={baseName} 
+      title={article.data.title} 
+      enableSwitching={true}
+      x={article.data.x}
+      y={article.data.y}
+    />
   </header>
 
   <div>

@@ -3,33 +3,39 @@ interface Props {
   baseName: string;
   title: string;
   enableSwitching?: boolean;
+  x: number;
+  y: number;
 }
 
-const { baseName, title, enableSwitching = true } = Astro.props;
+const { baseName, title, enableSwitching = true, x, y } = Astro.props;
 
 // SVGファイルのパスを生成
 const crossStitchPath = `${import.meta.env.BASE_URL}assets/${baseName}_cross-stitch.svg`;
 const pixelSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pixel.svg`;
 const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.svg`;
+
+// Tailwind CSS のクラス名を生成
+const widthClass = `w-[${x}rem]`;
+const heightClass = `h-[${y}rem]`;
 ---
 
 <div class="pattern-container" data-enable-switching={enableSwitching}>
   <img
     src={crossStitchPath}
     alt={`${title} / cross stitch like`}
-    class="w-full h-auto"
+    class={`${widthClass} ${heightClass}`}
     data-pattern-type="cross-stitch"
   />
   <img
     src={pixelSvgPath}
     alt={`${title} / pixel art`}
-    class="w-full h-auto hidden"
+    class={`hidden ${widthClass} ${heightClass}`}
     data-pattern-type="pixel"
   />
   <img
     src={patternSvgPath}
     alt={`${title} / pattern`}
-    class="w-full h-auto hidden"
+    class={`hidden ${widthClass} ${heightClass}`}
     data-pattern-type="pattern"
   />
 </div>
