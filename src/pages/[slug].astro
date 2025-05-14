@@ -11,14 +11,22 @@ export async function getStaticPaths() {
     return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime();
   });
   
-  return sortedArticles.map((article, index) => ({
-    params: { slug: article.id.replace('.md', '') },
-    props: {
-      article,
-      prevArticle: sortedArticles[index - 1],
-      nextArticle: sortedArticles[index + 1],
-    },
-  }));
+  return sortedArticles.map((article, index) => {
+    // 現在の記事のインデックスを取得
+    const currentIndex = sortedArticles.findIndex(a => a.id === article.id);
+    // 前後の記事を取得（存在しない場合は undefined）
+    const prevArticle = currentIndex < sortedArticles.length - 1 ? sortedArticles[currentIndex + 1] : undefined;
+    const nextArticle = currentIndex > 0 ? sortedArticles[currentIndex - 1] : undefined;
+
+    return {
+      params: { slug: article.id.replace('.md', '') },
+      props: {
+        article,
+        prevArticle,
+        nextArticle,
+      },
+    };
+  });
 }
 
 const { article, prevArticle, nextArticle } = Astro.props;
