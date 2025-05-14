@@ -16,19 +16,19 @@ const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.sv
 <div class="pattern-container" data-enable-switching={enableSwitching}>
   <img
     src={crossStitchPath}
-    alt={`${title} pixel art with grid`}
+    alt={`${title} / cross stitch like`}
     class="w-full h-auto hidden"
-    data-pattern-type="pixel-with-grid"
+    data-pattern-type="cross-stitch"
   />
   <img
     src={pixelSvgPath}
-    alt={`${title} pixel art`}
+    alt={`${title} / pixel art`}
     class="w-full h-auto"
     data-pattern-type="pixel"
   />
   <img
     src={patternSvgPath}
-    alt={`${title} pattern`}
+    alt={`${title} / pattern`}
     class="w-full h-auto hidden"
     data-pattern-type="pattern"
   />
@@ -36,8 +36,8 @@ const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.sv
 
 <script>
   // 各コンポーネントで独立して状態を管理
-  let currentType = 'pixel';
-  const types = ['pixel', 'pixel-with-grid', 'pattern'];
+  let currentType = 'cross-stitch';
+  const types = ['cross-stitch', 'pixel', 'pattern'];
 
   // クリックイベントの設定
   document.querySelectorAll('.pattern-container').forEach((container) => {
