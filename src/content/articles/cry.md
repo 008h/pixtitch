@@ -1,9 +1,5 @@
 ---
 title: "Cry"
-description: "Astroフレームワークの基本的な使い方と特徴について解説します。"
-pubDate: 2025-05-11
+description: ""
+pubDate: 2024-10-01
 ---
-
-# test
-
-test text

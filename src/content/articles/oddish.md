@@ -1,9 +1,5 @@
 ---
 title: "Oddish (Nazonokusa)"
-description: "Astroフレームワークの基本的な使い方と特徴について解説します。"
+description: ""
 pubDate: 2022-09-06
 ---
-
-# test
-
-test text
