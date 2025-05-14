@@ -13,13 +13,21 @@ const { Content } = await article.render();
 
 // ファイル名から.mdを除去
 const baseName = article.id.replace('.md', '');
+
+// 日付のフォーマット関数
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric'
+  });
+};
 ---
 
 <article>
   <header>
     <h1 class="text-3xl font-bold underline">{article.data.title}</h1>
     <p>
-      {article.data.pubDate.toLocaleDateString('ja-JP')}
+      {formatDate(article.data.pubDate)}
     </p>
     <PatternImages baseName={baseName} title={article.data.title} enableSwitching={true} />
   </header>
