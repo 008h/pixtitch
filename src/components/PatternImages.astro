@@ -8,23 +8,23 @@ interface Props {
 const { baseName, title, enableSwitching = true } = Astro.props;
 
 // SVGファイルのパスを生成
+const crossStitchPath = `${import.meta.env.BASE_URL}assets/${baseName}_cross-stitch.svg`;
 const pixelSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pixel.svg`;
-const pixelWithGridSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pixel-with-grid.svg`;
 const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.svg`;
 ---
 
 <div class="pattern-container" data-enable-switching={enableSwitching}>
   <img
+    src={crossStitchPath}
+    alt={`${title} pixel art with grid`}
+    class="w-full h-auto hidden"
+    data-pattern-type="pixel-with-grid"
+  />
+  <img
     src={pixelSvgPath}
     alt={`${title} pixel art`}
     class="w-full h-auto"
     data-pattern-type="pixel"
-  />
-  <img
-    src={pixelWithGridSvgPath}
-    alt={`${title} pixel art with grid`}
-    class="w-full h-auto hidden"
-    data-pattern-type="pixel-with-grid"
   />
   <img
     src={patternSvgPath}
