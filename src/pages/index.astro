@@ -5,11 +5,9 @@ import PatternImages from '../components/PatternImages.astro';
 import Header from '../components/Header.astro'
 
 const articles = await getCollection('articles');
-// IDの数字部分でソート
+// pub-date の新しい順にソート
 const sortedArticles = articles.sort((a, b) => {
-  const aNum = Number.parseInt(a.id.replace('content-', '').replace('.md', ''));
-  const bNum = Number.parseInt(b.id.replace('content-', '').replace('.md', ''));
-  return aNum - bNum;
+  return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime();
 });
 ---
 
@@ -18,7 +16,7 @@ const sortedArticles = articles.sort((a, b) => {
   <Header showDescription />
   <main>
     <ol>
-      {articles.map((article) => (
+      {sortedArticles.map((article) => (
         <li>
             <a href={`${import.meta.env.BASE_URL}${article.id.replace('.md', '')}`}>
               <PatternImages baseName={article.id.replace('.md', '')} title={article.data.title} enableSwitching={false} />
