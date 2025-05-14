@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import PatternImages from '../components/PatternImages.astro';
 import Header from '../components/Header.astro'
 
-const articles = await getCollection('articles');
+const articles = await getCollection('patterns');
 // pub-date の新しい順にソート
 const sortedArticles = articles.sort((a, b) => {
   return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime();
