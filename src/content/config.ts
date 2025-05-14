@@ -7,6 +7,8 @@ const patterns = defineCollection({
     description: z.string(),
     pubDate: z.date(),
     updatedDate: z.date().optional(),
+    x: z.number(),
+    y: z.number(),
   }),
 });
 
