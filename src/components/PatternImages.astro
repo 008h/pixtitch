@@ -5,37 +5,43 @@ interface Props {
   enableSwitching?: boolean;
   x: number;
   y: number;
+  isDetailPage?: boolean;
 }
 
-const { baseName, title, enableSwitching = true, x, y } = Astro.props;
+const { baseName, title, enableSwitching = true, x, y, isDetailPage = false } = Astro.props;
 
 // SVGファイルのパスを生成
 const crossStitchPath = `${import.meta.env.BASE_URL}assets/${baseName}_cross-stitch.svg`;
 const pixelSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pixel.svg`;
 const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.svg`;
 
-// Tailwind CSS のクラス名を生成
-const widthClass = `w-[${x}rem]`;
-const heightClass = `h-[${y}rem]`;
+// スタイルを条件付きで設定
+const containerStyle = isDetailPage 
+  ? 'w-full' 
+  : `w-[calc(var(--pattern-scale)*${x}rem)] h-[calc(var(--pattern-scale)*${y}rem)]`;
 ---
 
-<div class="pattern-container" data-enable-switching={enableSwitching}>
+<div 
+  class="pattern-container" 
+  data-enable-switching={enableSwitching}
+  style={isDetailPage ? undefined : `--pattern-width: ${x}; --pattern-height: ${y};`}
+>
   <img
     src={crossStitchPath}
     alt={`${title} / cross stitch like`}
-    class={`${widthClass} ${heightClass}`}
+    class={containerStyle}
     data-pattern-type="cross-stitch"
   />
   <img
     src={pixelSvgPath}
     alt={`${title} / pixel art`}
-    class={`hidden ${widthClass} ${heightClass}`}
+    class={`hidden ${containerStyle}`}
     data-pattern-type="pixel"
   />
   <img
     src={patternSvgPath}
     alt={`${title} / pattern`}
-    class={`hidden ${widthClass} ${heightClass}`}
+    class={`hidden ${containerStyle}`}
     data-pattern-type="pattern"
   />
 </div>

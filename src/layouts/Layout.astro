@@ -1,6 +1,7 @@
 ---
 import Footer from '../components/Footer.astro';
-import '../styles/globals.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import '../styles/global.css';
 
 interface Props {
 	title: string;
@@ -10,7 +11,7 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,7 +20,10 @@ const { title } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
 		<title>{title}</title>
 	</head>
-	<body class="min-h-screen flex flex-col bg-gray-50">
+	<body class="min-h-screen flex flex-col bg-base-100">
+		<header class="container mx-auto px-4 py-4 flex justify-end">
+			<ThemeToggle />
+		</header>
 		<main class="flex-grow container mx-auto px-4 py-8">
 			<slot />
 		</main>

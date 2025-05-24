@@ -1,1 +1,13 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+:root {
+  --pattern-scale: 0.5; /* パターンのスケール係数 */
+}
+
+@layer base {
+  .pattern-container img {
+    width: calc(var(--pattern-scale) * var(--pattern-width) * 1rem);
+    height: calc(var(--pattern-scale) * var(--pattern-height) * 1rem);
+  }
+}
