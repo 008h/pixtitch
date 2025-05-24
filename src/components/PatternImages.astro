@@ -1,14 +1,15 @@
 ---
+import { getCurrentImageType } from '../utils/imageType';
+
 interface Props {
   baseName: string;
   title: string;
-  enableSwitching?: boolean;
   x: number;
   y: number;
   isDetailPage?: boolean;
 }
 
-const { baseName, title, enableSwitching = true, x, y, isDetailPage = false } = Astro.props;
+const { baseName, title, x, y, isDetailPage = false } = Astro.props;
 
 // SVGファイルのパスを生成
 const crossStitchPath = `${import.meta.env.BASE_URL}assets/${baseName}_cross-stitch.svg`;
@@ -19,29 +20,31 @@ const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.sv
 const containerStyle = isDetailPage 
   ? 'w-full' 
   : `w-[calc(var(--pattern-scale)*${x}rem)] h-[calc(var(--pattern-scale)*${y}rem)]`;
+
+// 現在の画像タイプを取得
+const currentType = getCurrentImageType();
 ---
 
 <div 
   class="pattern-container" 
-  data-enable-switching={enableSwitching}
   style={isDetailPage ? undefined : `--pattern-width: ${x}; --pattern-height: ${y};`}
 >
   <img
     src={crossStitchPath}
     alt={`${title} / cross stitch like`}
-    class={containerStyle}
+    class={`${containerStyle} ${currentType === 'cross-stitch' ? '' : 'hidden'}`}
     data-pattern-type="cross-stitch"
   />
   <img
     src={pixelSvgPath}
     alt={`${title} / pixel art`}
-    class={`hidden ${containerStyle}`}
+    class={`${containerStyle} ${currentType === 'pixel' ? '' : 'hidden'}`}
     data-pattern-type="pixel"
   />
   <img
     src={patternSvgPath}
     alt={`${title} / pattern`}
-    class={`hidden ${containerStyle}`}
+    class={`${containerStyle} ${currentType === 'pattern' ? '' : 'hidden'}`}
     data-pattern-type="pattern"
   />
 </div>

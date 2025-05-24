@@ -1,6 +1,8 @@
 ---
 import Footer from '../components/Footer.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import ImageTypeToggle from '../components/ImageTypeToggle.astro';
+import { getCurrentImageType } from '../utils/imageType';
 import '../styles/global.css';
 
 interface Props {
@@ -8,10 +10,11 @@ interface Props {
 }
 
 const { title } = Astro.props;
+const currentImageType = getCurrentImageType();
 ---
 
 <!doctype html>
-<html lang="ja" data-theme="light">
+<html lang="ja" data-theme="light" data-image-type={currentImageType}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,7 +24,8 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body class="min-h-screen flex flex-col bg-base-100">
-		<header class="container mx-auto px-4 py-4 flex justify-end">
+		<header class="container mx-auto px-4 py-4 flex justify-end gap-2">
+			<ImageTypeToggle />
 			<ThemeToggle />
 		</header>
 		<main class="flex-grow container mx-auto px-4 py-8">

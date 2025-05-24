@@ -91,61 +91,95 @@ const formatDate = (date: Date) => {
       {prevArticle && (
         <a 
           href={`${import.meta.env.BASE_URL}${prevArticle.id.replace('.md', '')}`}
-          class="btn btn-ghost btn-circle"
-          aria-label="前のパターン"
+          class="flex items-center gap-2 hover:opacity-80"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-            />
-          </svg>
+          <div class="btn btn-ghost btn-circle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+              />
+            </svg>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 pattern-container">
+              <img
+                src={`${import.meta.env.BASE_URL}assets/${prevArticle.id.replace('.md', '')}_cross-stitch.svg`}
+                alt={`${prevArticle.data.title} / cross stitch like`}
+                class="w-full h-full"
+                data-pattern-type="cross-stitch"
+              />
+              <img
+                src={`${import.meta.env.BASE_URL}assets/${prevArticle.id.replace('.md', '')}_pixel.svg`}
+                alt={`${prevArticle.data.title} / pixel art`}
+                class="w-full h-full hidden"
+                data-pattern-type="pixel"
+              />
+              <img
+                src={`${import.meta.env.BASE_URL}assets/${prevArticle.id.replace('.md', '')}_pattern.svg`}
+                alt={`${prevArticle.data.title} / pattern`}
+                class="w-full h-full hidden"
+                data-pattern-type="pattern"
+              />
+            </div>
+            <span class="text-sm">{prevArticle.data.title}</span>
+          </div>
         </a>
-      )}
-      {prevArticle && (
-        <img
-          src={`${import.meta.env.BASE_URL}assets/${prevArticle.id.replace('.md', '')}_pixel.svg`}
-          alt="前のパターン"
-          class="w-8 h-8"
-        />
       )}
     </div>
     <div class="flex items-center gap-2">
       {nextArticle && (
-        <img
-          src={`${import.meta.env.BASE_URL}assets/${nextArticle.id.replace('.md', '')}_pixel.svg`}
-          alt="次のパターン"
-          class="w-8 h-8"
-        />
-      )}
-      {nextArticle && (
         <a 
           href={`${import.meta.env.BASE_URL}${nextArticle.id.replace('.md', '')}`}
-          class="btn btn-ghost btn-circle"
-          aria-label="次のパターン"
+          class="flex items-center gap-2 hover:opacity-80"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-            />
-          </svg>
+          <div class="flex items-center gap-2">
+            <span class="text-sm">{nextArticle.data.title}</span>
+            <div class="w-8 h-8 pattern-container">
+              <img
+                src={`${import.meta.env.BASE_URL}assets/${nextArticle.id.replace('.md', '')}_cross-stitch.svg`}
+                alt={`${nextArticle.data.title} / cross stitch like`}
+                class="w-full h-full"
+                data-pattern-type="cross-stitch"
+              />
+              <img
+                src={`${import.meta.env.BASE_URL}assets/${nextArticle.id.replace('.md', '')}_pixel.svg`}
+                alt={`${nextArticle.data.title} / pixel art`}
+                class="w-full h-full hidden"
+                data-pattern-type="pixel"
+              />
+              <img
+                src={`${import.meta.env.BASE_URL}assets/${nextArticle.id.replace('.md', '')}_pattern.svg`}
+                alt={`${nextArticle.data.title} / pattern`}
+                class="w-full h-full hidden"
+                data-pattern-type="pattern"
+              />
+            </div>
+          </div>
+          <div class="btn btn-ghost btn-circle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+              />
+            </svg>
+          </div>
         </a>
       )}
     </div>
