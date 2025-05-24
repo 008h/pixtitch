@@ -67,6 +67,12 @@ const currentType = getCurrentImageType();
         const nextIndex = (currentIndex + 1) % types.length;
         currentType = types[nextIndex];
 
+        // カスタムイベントを発火
+        const event = new CustomEvent('imageTypeChange', {
+          detail: { type: currentType }
+        });
+        document.dispatchEvent(event);
+
         // すべての画像を非表示にしてから、現在のタイプの画像のみを表示
         const images = container.querySelectorAll('img[data-pattern-type]');
         images.forEach((img) => {

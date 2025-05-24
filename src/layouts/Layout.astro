@@ -31,6 +31,75 @@ const currentTheme = getCurrentTheme();
 				document.documentElement.setAttribute('data-theme', theme);
 			})();
 		</script>
+		<script>
+			// カスタムイベントの型定義
+			interface ThemeChangeEvent extends CustomEvent {
+				detail: {
+					theme: 'light' | 'dark';
+				};
+			}
+
+			interface ImageTypeChangeEvent extends CustomEvent {
+				detail: {
+					type: 'cross-stitch' | 'pixel' | 'pattern';
+				};
+			}
+
+			// View Transitions APIのサポートを確認
+			if (document.startViewTransition) {
+				// カスタムイベントをリッスン
+				document.addEventListener('themeChange', ((e: ThemeChangeEvent) => {
+					document.startViewTransition(() => {
+						document.documentElement.setAttribute('data-theme', e.detail.theme);
+					});
+				}) as EventListener);
+
+				document.addEventListener('imageTypeChange', ((e: ImageTypeChangeEvent) => {
+					document.startViewTransition(() => {
+						document.documentElement.setAttribute('data-image-type', e.detail.type);
+					});
+				}) as EventListener);
+
+				// ページ遷移のアニメーションを設定
+				document.addEventListener('click', (e) => {
+					const target = e.target as HTMLElement;
+					const link = target.closest('a');
+					if (link && link.href && link.href.startsWith(window.location.origin)) {
+						e.preventDefault();
+						document.startViewTransition(async () => {
+							await navigate(link.href);
+						});
+					}
+				});
+
+				// ページ遷移の関数
+				async function navigate(url: string) {
+					const response = await fetch(url);
+					const html = await response.text();
+					const parser = new DOMParser();
+					const doc = parser.parseFromString(html, 'text/html');
+					document.documentElement.innerHTML = doc.documentElement.innerHTML;
+					history.pushState({}, '', url);
+				}
+			}
+		</script>
+		<style>
+			@keyframes slide-from-right {
+				from { transform: translateX(100%); }
+			}
+
+			@keyframes slide-to-left {
+				to { transform: translateX(-100%); }
+			}
+
+			::view-transition-old(root) {
+				animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+			}
+
+			::view-transition-new(root) {
+				animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+			}
+		</style>
 	</head>
 	<body class="min-h-screen flex flex-col bg-base-100 text-base-content">
 		<Header />

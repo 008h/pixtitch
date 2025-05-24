@@ -112,6 +112,13 @@ const currentType = getCurrentImageType();
         // クリックされたタブをアクティブにする
         tab.classList.add('tab-active');
         currentType = type;
+        
+        // カスタムイベントを発火
+        const event = new CustomEvent('imageTypeChange', {
+          detail: { type }
+        });
+        document.dispatchEvent(event);
+        
         setImageType(currentType);
       }
     });

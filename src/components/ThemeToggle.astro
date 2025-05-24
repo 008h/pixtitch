@@ -29,6 +29,11 @@
       // トグルボタンのイベントリスナー
       themeToggle.addEventListener('change', () => {
         const newTheme = themeToggle.checked ? 'dark' : 'light';
+        // カスタムイベントを発火
+        const event = new CustomEvent('themeChange', {
+          detail: { theme: newTheme }
+        });
+        document.dispatchEvent(event);
         setTheme(newTheme);
       });
 
@@ -38,6 +43,10 @@
         // ユーザーが明示的に設定していない場合のみOSの設定に従う
         if (!localStorage.getItem('theme')) {
           const newTheme = e.matches ? 'dark' : 'light';
+          const event = new CustomEvent('themeChange', {
+            detail: { theme: newTheme }
+          });
+          document.dispatchEvent(event);
           setTheme(newTheme);
           themeToggle.checked = e.matches;
         }
