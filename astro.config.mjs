@@ -16,4 +16,21 @@ export default defineConfig({
 
     plugins: [tailwindcss()],
   },
+  svgo: {
+    multipass: true,
+    plugins: [
+      {
+        name: 'preset-default',
+        params: {
+          overrides: {
+            removeViewBox: false,
+            removeStyleElement: true,
+            removeAttrs: {
+              attrs: ['style']
+            }
+          }
+        }
+      }
+    ]
+  }
 });

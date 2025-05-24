@@ -1,6 +1,10 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import PatternImages from './PatternImages.astro';
+import ColorPalette from './ColorPalette.astro';
+import { extractColorsFromSVG, formatColorName } from '../utils/colorExtractor';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 interface Props {
   article: CollectionEntry<'patterns'>;
@@ -13,6 +17,18 @@ const { Content } = await article.render();
 
 // ファイル名から.mdを除去
 const baseName = article.id.replace('.md', '');
+
+// SVGファイルを読み込んで色を抽出
+const publicDir = path.join(process.cwd(), 'public');
+const svgFilePath = path.join(publicDir, 'assets', `${baseName}_pixel.svg`);
+
+let colors: string[] = [];
+try {
+  const svgContent = await fs.readFile(svgFilePath, 'utf-8');
+  colors = extractColorsFromSVG(svgContent).map(formatColorName);
+} catch (error) {
+  // エラーは無視（色の抽出に失敗した場合は空の配列を使用）
+}
 
 // 日付のフォーマット関数
 const formatDate = (date: Date) => {
@@ -39,6 +55,7 @@ const formatDate = (date: Date) => {
         isDetailPage={true}
       />
     </div>
+    {colors.length > 0 && <ColorPalette colors={colors} />}
   </header>
 
   <div>

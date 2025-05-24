@@ -2,7 +2,11 @@
 import { getCollection } from 'astro:content';
 import Pattern from '../components/Pattern.astro';
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro'
+import Header from '../components/Header.astro';
+import ColorPalette from '../components/ColorPalette.astro';
+import { extractColorsFromSVG, formatColorName } from '../utils/colorExtractor';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 export async function getStaticPaths() {
   const articles = await getCollection('patterns');
@@ -30,6 +34,19 @@ export async function getStaticPaths() {
 }
 
 const { article, prevArticle, nextArticle } = Astro.props;
+
+// SVGファイルを読み込んで色を抽出
+const baseFileName = article.id.replace('patterns/', '').replace('.md', '');
+const publicDir = path.join(process.cwd(), 'public');
+const svgFilePath = path.join(publicDir, 'assets', `${baseFileName}_pixel.svg`);
+
+let colors: string[] = [];
+try {
+  const svgContent = await fs.readFile(svgFilePath, 'utf-8');
+  colors = extractColorsFromSVG(svgContent).map(formatColorName);
+} catch (error) {
+  // エラーは無視（色の抽出に失敗した場合は空の配列を使用）
+}
 ---
 
 <Layout title={article.data.title}>

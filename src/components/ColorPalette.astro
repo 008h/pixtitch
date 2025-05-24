@@ -1,0 +1,27 @@
+---
+interface Props {
+  colors: string[];
+}
+
+const { colors } = Astro.props;
+console.log('ColorPalette received colors:', colors);
+---
+
+<div class="my-4">
+  <h2 class="text-xl font-bold mb-2">Color Palette</h2>
+  <div class="flex flex-wrap gap-4">
+    {colors.map((color) => {
+      console.log('Rendering color:', color);
+      return (
+        <div class="flex items-center gap-2 bg-base-200 p-2 rounded-lg">
+          <div
+            class="w-8 h-8 rounded border border-base-300 shadow-sm"
+            style={`background-color: ${color}`}
+          />
+          <span class="text-sm font-mono">{color}</span>
+        </div>
+      );
+    })}
+  </div>
+</div>
+ 
