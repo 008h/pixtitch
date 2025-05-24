@@ -94,6 +94,13 @@ const currentTheme = getCurrentTheme();
 							});
 						}
 					});
+
+					// ブラウザの戻る・進むボタンのイベントハンドラ
+					window.addEventListener('popstate', async () => {
+						document.startViewTransition(async () => {
+							await navigate(window.location.href);
+						});
+					});
 				}
 			}
 
@@ -124,8 +131,10 @@ const currentTheme = getCurrentTheme();
 					document.documentElement.setAttribute('data-theme', currentTheme);
 					document.documentElement.setAttribute('data-image-type', currentImageType);
 
-					// 履歴を更新
-					history.pushState({}, '', url);
+					// 履歴を更新（popstateイベントの場合は更新しない）
+					if (url !== window.location.href) {
+						history.pushState({}, '', url);
+					}
 
 					// 画像の表示状態を更新
 					document.querySelectorAll('.pattern-container').forEach((container) => {
