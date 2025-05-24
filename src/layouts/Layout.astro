@@ -45,43 +45,107 @@ const currentTheme = getCurrentTheme();
 				};
 			}
 
-			// View Transitions APIのサポートを確認
-			if (document.startViewTransition) {
-				// カスタムイベントをリッスン
-				document.addEventListener('themeChange', ((e: ThemeChangeEvent) => {
-					document.startViewTransition(() => {
-						document.documentElement.setAttribute('data-theme', e.detail.theme);
-					});
-				}) as EventListener);
+			// グローバルな状態管理
+			let currentTheme = localStorage.getItem('theme') || 
+				(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+			let currentImageType = localStorage.getItem('imageType') || 'cross-stitch';
 
-				document.addEventListener('imageTypeChange', ((e: ImageTypeChangeEvent) => {
-					document.startViewTransition(() => {
-						document.documentElement.setAttribute('data-image-type', e.detail.type);
-					});
-				}) as EventListener);
-
-				// ページ遷移のアニメーションを設定
-				document.addEventListener('click', (e) => {
-					const target = e.target as HTMLElement;
-					const link = target.closest('a');
-					if (link && link.href && link.href.startsWith(window.location.origin)) {
-						e.preventDefault();
-						document.startViewTransition(async () => {
-							await navigate(link.href);
+			// イベントリスナーの設定
+			function setupEventListeners() {
+				// View Transitions APIのサポートを確認
+				if (document.startViewTransition) {
+					// カスタムイベントをリッスン
+					document.addEventListener('themeChange', ((e: ThemeChangeEvent) => {
+						currentTheme = e.detail.theme;
+						document.startViewTransition(() => {
+							document.documentElement.setAttribute('data-theme', currentTheme);
+							localStorage.setItem('theme', currentTheme);
 						});
-					}
-				});
+					}) as EventListener);
 
-				// ページ遷移の関数
-				async function navigate(url: string) {
+					document.addEventListener('imageTypeChange', ((e: ImageTypeChangeEvent) => {
+						currentImageType = e.detail.type;
+						document.startViewTransition(() => {
+							document.documentElement.setAttribute('data-image-type', currentImageType);
+							localStorage.setItem('imageType', currentImageType);
+							
+							// すべての画像コンテナを更新
+							document.querySelectorAll('.pattern-container').forEach((container) => {
+								const images = container.querySelectorAll('img[data-pattern-type]');
+								images.forEach((img) => {
+									if (img.getAttribute('data-pattern-type') === currentImageType) {
+										img.classList.remove('hidden');
+									} else {
+										img.classList.add('hidden');
+									}
+								});
+							});
+						});
+					}) as EventListener);
+
+					// ページ遷移のアニメーションを設定
+					document.addEventListener('click', (e) => {
+						const target = e.target as HTMLElement;
+						const link = target.closest('a');
+						if (link && link.href && link.href.startsWith(window.location.origin)) {
+							e.preventDefault();
+							document.startViewTransition(async () => {
+								await navigate(link.href);
+							});
+						}
+					});
+				}
+			}
+
+			// ページ遷移の関数
+			async function navigate(url: string) {
+				try {
 					const response = await fetch(url);
+					if (!response.ok) throw new Error('Network response was not ok');
+					
 					const html = await response.text();
 					const parser = new DOMParser();
 					const doc = parser.parseFromString(html, 'text/html');
-					document.documentElement.innerHTML = doc.documentElement.innerHTML;
+
+					// メインコンテンツのみを更新
+					const newMain = doc.querySelector('main');
+					const currentMain = document.querySelector('main');
+					if (newMain && currentMain) {
+						currentMain.innerHTML = newMain.innerHTML;
+					}
+
+					// タイトルを更新
+					const newTitle = doc.querySelector('title');
+					if (newTitle) {
+						document.title = newTitle.textContent || '';
+					}
+
+					// 現在の状態を維持
+					document.documentElement.setAttribute('data-theme', currentTheme);
+					document.documentElement.setAttribute('data-image-type', currentImageType);
+
+					// 履歴を更新
 					history.pushState({}, '', url);
+
+					// 画像の表示状態を更新
+					document.querySelectorAll('.pattern-container').forEach((container) => {
+						const images = container.querySelectorAll('img[data-pattern-type]');
+						images.forEach((img) => {
+							if (img.getAttribute('data-pattern-type') === currentImageType) {
+								img.classList.remove('hidden');
+							} else {
+								img.classList.add('hidden');
+							}
+						});
+					});
+				} catch (error) {
+					console.error('Navigation failed:', error);
+					window.location.href = url; // フォールバック
 				}
 			}
+
+			// 初期設定
+			setupEventListeners();
 		</script>
 		<style>
 			@keyframes slide-from-right {
