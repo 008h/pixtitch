@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import { getCurrentImageType } from '../utils/imageType';
 import { getCurrentTheme } from '../utils/theme';
 import '../styles/global.css';
+import ImageTypeToggle from '../components/ImageTypeToggle.astro'
 
 interface Props {
 	title: string;
@@ -186,5 +187,6 @@ const currentTheme = getCurrentTheme();
 			<slot />
 		</main>
 		<Footer />
+        <ImageTypeToggle />
 	</body>
 </html>
