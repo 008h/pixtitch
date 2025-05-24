@@ -10,27 +10,29 @@ interface Props {
 const { showDescription = false, title } = Astro.props;
 ---
 
-<header class="sticky top-0">
-    <div>
-      <h1>
-        <a href=`${import.meta.env.BASE_URL}` class="text-xl font-bold text-gray-800 hover:text-gray-600">
-          Pixtitch
-        </a>
-      </h1>
-      {title && (
-        <h2 class="text-lg font-medium text-gray-600">
-          {title}
-        </h2>
+<header class="sticky top-0 bg-base-100 border-b border-base-300">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div>
+        <h1>
+          <a href={`${import.meta.env.BASE_URL}`} class="text-xl font-bold text-base-content hover:text-base-content/80 transition-colors">
+            Pixtitch
+          </a>
+        </h1>
+        {title && (
+          <h2 class="text-lg font-medium text-base-content/70">
+            {title}
+          </h2>
+        )}
+      </div>
+      {showDescription && (
+        <p class="text-base-content/70">
+          pixtitch is an ongoing project by Hiroshi Ohba, exploring the intersection of pixel art and embroidery.
+        </p>
       )}
-    </div>
-    {showDescription && (
-      <p>
-        pixtitch is an ongoing project by Hiroshi Ohba, exploring the intersection of pixel art and embroidery.
-      </p>
-    )}
 
-			<div class="flex gap-2">
-				<ImageTypeToggle />
-				<ThemeToggle />
-			</div>
+      <div class="flex gap-2">
+        <ImageTypeToggle />
+        <ThemeToggle />
+      </div>
+    </div>
 </header>
