@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PatternImages from '../components/PatternImages.astro';
-import Header from '../components/Header.astro'
 
 const articles = await getCollection('patterns');
 // pub-date の新しい順にソート
@@ -12,7 +11,6 @@ const sortedArticles = articles.sort((a, b) => {
 ---
 
 <Layout title="Pixtitch">
-  <Header showDescription />
   <main>
     <ol>
       {sortedArticles.map((article) => (
@@ -20,8 +18,7 @@ const sortedArticles = articles.sort((a, b) => {
             <a href={`${import.meta.env.BASE_URL}${article.id.replace('.md', '')}`}>
               <PatternImages 
                 baseName={article.id.replace('.md', '')} 
-                title={article.data.title} 
-                enableSwitching={false}
+                title={article.data.title}
                 x={article.data.x}
                 y={article.data.y}
               />

@@ -23,11 +23,24 @@
   if (typeof window !== 'undefined') {
     const themeToggle = document.getElementById('theme-toggle') as HTMLInputElement;
     if (themeToggle) {
+      // 初期状態の設定
       themeToggle.checked = getCurrentTheme() === 'dark';
 
+      // トグルボタンのイベントリスナー
       themeToggle.addEventListener('change', () => {
         const newTheme = themeToggle.checked ? 'dark' : 'light';
         setTheme(newTheme);
+      });
+
+      // OSの設定変更を監視
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      mediaQuery.addEventListener('change', (e) => {
+        // ユーザーが明示的に設定していない場合のみOSの設定に従う
+        if (!localStorage.getItem('theme')) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          setTheme(newTheme);
+          themeToggle.checked = e.matches;
+        }
       });
     }
   }

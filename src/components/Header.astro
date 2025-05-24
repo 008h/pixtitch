@@ -1,4 +1,7 @@
 ---
+import ImageTypeToggle from './ImageTypeToggle.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
 interface Props {
   showDescription?: boolean;
   title?: string;
@@ -25,4 +28,9 @@ const { showDescription = false, title } = Astro.props;
         pixtitch is an ongoing project by Hiroshi Ohba, exploring the intersection of pixel art and embroidery.
       </p>
     )}
+
+			<div class="flex gap-2">
+				<ImageTypeToggle />
+				<ThemeToggle />
+			</div>
 </header>

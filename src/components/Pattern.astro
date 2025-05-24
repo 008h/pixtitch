@@ -64,16 +64,15 @@ const formatDate = (date: Date) => {
 ---
 
 <article>
-  <header>
-    <h1 class="text-3xl font-bold underline">{article.data.title}</h1>
-    <p>
+  <header class="text-base-content">
+    <h1 class="text-3xl font-bold underline decoration-base-content/30">{article.data.title}</h1>
+    <p class="text-base-content/70">
       {formatDate(article.data.pubDate)}
     </p>
     <div class="my-8">
       <PatternImages 
         baseName={baseName} 
-        title={article.data.title} 
-        enableSwitching={true}
+        title={article.data.title}
         x={article.data.x}
         y={article.data.y}
         isDetailPage={true}
