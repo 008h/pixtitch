@@ -30,6 +30,30 @@ try {
   // エラーは無視（色の抽出に失敗した場合は空の配列を使用）
 }
 
+// 前後の記事のSVGを読み込む
+let prevSvgContent = '';
+let nextSvgContent = '';
+
+if (prevArticle) {
+  const prevBaseName = prevArticle.id.replace('.md', '');
+  const prevSvgPath = path.join(publicDir, 'assets', `${prevBaseName}_pixel.svg`);
+  try {
+    prevSvgContent = await fs.readFile(prevSvgPath, 'utf-8');
+  } catch (error) {
+    // エラーは無視
+  }
+}
+
+if (nextArticle) {
+  const nextBaseName = nextArticle.id.replace('.md', '');
+  const nextSvgPath = path.join(publicDir, 'assets', `${nextBaseName}_pixel.svg`);
+  try {
+    nextSvgContent = await fs.readFile(nextSvgPath, 'utf-8');
+  } catch (error) {
+    // エラーは無視
+  }
+}
+
 // 日付のフォーマット関数
 const formatDate = (date: Date) => {
   return date.toLocaleDateString('en-US', {
@@ -62,16 +86,66 @@ const formatDate = (date: Date) => {
     <Content />
   </div>
 
-  <nav>
-    <div>
+  <nav class="flex justify-between items-center mt-8">
+    <div class="flex items-center gap-2">
       {prevArticle && (
-        <a href={`${import.meta.env.BASE_URL}${prevArticle.id.replace('.md', '')}`}>
-          ← {prevArticle.data.title}
+        <a 
+          href={`${import.meta.env.BASE_URL}${prevArticle.id.replace('.md', '')}`}
+          class="btn btn-ghost btn-circle"
+          aria-label="前のパターン"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+            />
+          </svg>
         </a>
       )}
+      {prevArticle && (
+        <img
+          src={`${import.meta.env.BASE_URL}assets/${prevArticle.id.replace('.md', '')}_pixel.svg`}
+          alt="前のパターン"
+          class="w-8 h-8"
+        />
+      )}
+    </div>
+    <div class="flex items-center gap-2">
       {nextArticle && (
-        <a href={`${import.meta.env.BASE_URL}${nextArticle.id.replace('.md', '')}`}>
-          {nextArticle.data.title} →
+        <img
+          src={`${import.meta.env.BASE_URL}assets/${nextArticle.id.replace('.md', '')}_pixel.svg`}
+          alt="次のパターン"
+          class="w-8 h-8"
+        />
+      )}
+      {nextArticle && (
+        <a 
+          href={`${import.meta.env.BASE_URL}${nextArticle.id.replace('.md', '')}`}
+          class="btn btn-ghost btn-circle"
+          aria-label="次のパターン"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+            />
+          </svg>
         </a>
       )}
     </div>
