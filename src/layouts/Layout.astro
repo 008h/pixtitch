@@ -138,6 +138,12 @@ const currentTheme = getCurrentTheme();
 							}
 						});
 					});
+
+					// ページの先頭にスクロール
+					window.scrollTo({
+						top: 0,
+						behavior: 'smooth'
+					});
 				} catch (error) {
 					console.error('Navigation failed:', error);
 					window.location.href = url; // フォールバック
