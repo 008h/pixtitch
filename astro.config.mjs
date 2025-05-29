@@ -9,28 +9,9 @@ export default defineConfig({
   base: "/",
   vite: {
     assetsInclude: ["**/*.svg"],
-
     build: {
       assetsDir: "assets",
     },
-
-    plugins: [tailwindcss()],
-  },
-  svgo: {
-    multipass: true,
-    plugins: [
-      {
-        name: 'preset-default',
-        params: {
-          overrides: {
-            removeViewBox: false,
-            removeStyleElement: true,
-            removeAttrs: {
-              attrs: ['style']
-            }
-          }
-        }
-      }
-    ]
+    plugins: [tailwindcss()]
   }
 });
