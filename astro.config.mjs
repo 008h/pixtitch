@@ -5,8 +5,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://008h.github.io/pixtitch/",
-  base: "/pixtitch/",
+  site: "https://pixtitch.net",
+  base: "/",
   vite: {
     assetsInclude: ["**/*.svg"],
 
