@@ -10,10 +10,12 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@nanostores/react": "^1.0.0",
     "@tailwindcss/vite": "^4.1.6",
     "@types/jsdom": "^21.1.7",
     "astro": "^5.8.0",
-    "jsdom": "^26.1.0"
+    "jsdom": "^26.1.0",
+    "nanostores": "^1.0.1"
   },
   "devDependencies": {
     "daisyui": "^5.0.37",

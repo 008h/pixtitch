@@ -1,5 +1,5 @@
 ---
-import { getCurrentImageType } from '../utils/imageType';
+import { imageTypeStore, type ImageType } from '../stores/imageType';
 
 interface Props {
   baseName: string;
@@ -22,7 +22,7 @@ const containerStyle = isDetailPage
   : `w-[calc(var(--pattern-scale)*${x}rem)] h-[calc(var(--pattern-scale)*${y}rem)]`;
 
 // 現在の画像タイプを取得
-const currentType = getCurrentImageType();
+const currentType = imageTypeStore.get();
 ---
 
 <div 
@@ -50,9 +50,9 @@ const currentType = getCurrentImageType();
 </div>
 
 <script>
-  // 各コンポーネントで独立して状態を管理
-  let currentType = 'cross-stitch';
-  const types = ['cross-stitch', 'pixel', 'pattern'];
+  import { imageTypeStore, type ImageType } from '../stores/imageType';
+
+  const types: ImageType[] = ['cross-stitch', 'pixel', 'pattern'];
 
   // クリックイベントの設定
   document.querySelectorAll('.pattern-container').forEach((container) => {
@@ -62,21 +62,25 @@ const currentType = getCurrentImageType();
       (container as HTMLElement).style.cursor = 'pointer';
       container.addEventListener('click', () => {
         // 現在のタイプのインデックスを取得
+        const currentType = imageTypeStore.get();
         const currentIndex = types.indexOf(currentType);
         // 次のタイプを計算（最後の場合は最初に戻る）
         const nextIndex = (currentIndex + 1) % types.length;
-        currentType = types[nextIndex];
+        const nextType = types[nextIndex];
+
+        // ストアを更新
+        imageTypeStore.set(nextType);
 
         // カスタムイベントを発火
         const event = new CustomEvent('imageTypeChange', {
-          detail: { type: currentType }
+          detail: { type: nextType }
         });
         document.dispatchEvent(event);
 
         // すべての画像を非表示にしてから、現在のタイプの画像のみを表示
         const images = container.querySelectorAll('img[data-type]');
         images.forEach((img) => {
-          if (img.getAttribute('data-type') === currentType) {
+          if (img.getAttribute('data-type') === nextType) {
             img.classList.remove('hidden');
           } else {
             img.classList.add('hidden');
@@ -84,5 +88,19 @@ const currentType = getCurrentImageType();
         });
       });
     }
+  });
+
+  // ストアの変更を監視して画像を更新
+  imageTypeStore.subscribe((type) => {
+    document.querySelectorAll('.pattern-container').forEach((container) => {
+      const images = container.querySelectorAll('img[data-type]');
+      images.forEach((img) => {
+        if (img.getAttribute('data-type') === type) {
+          img.classList.remove('hidden');
+        } else {
+          img.classList.add('hidden');
+        }
+      });
+    });
   });
 </script>

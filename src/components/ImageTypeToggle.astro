@@ -1,10 +1,10 @@
 ---
-import { getCurrentImageType } from '../utils/imageType';
+import { imageTypeStore, type ImageType } from '../stores/imageType';
 import crossStitchIcon from '../assets/images/switch_cross-stitch.svg?url';
 import pixelIcon from '../assets/images/switch_pixel.svg?url';
 import patternIcon from '../assets/images/switch_pattern.svg?url';
 
-const currentType = getCurrentImageType();
+const currentType = imageTypeStore.get();
 ---
 
 <div class="tabs tabs-boxed fixed bottom-4 right-4">
@@ -35,53 +35,47 @@ const currentType = getCurrentImageType();
 </div>
 
 <script>
-  import { setImageType, getCurrentImageType } from '../utils/imageType';
+  import { imageTypeStore, type ImageType } from '../stores/imageType';
 
-  const types = ['cross-stitch', 'pixel', 'pattern'] as const;
-  let currentType = getCurrentImageType();
+  const types: ImageType[] = ['cross-stitch', 'pixel', 'pattern'];
 
   // 初期状態の設定
-  document.addEventListener('DOMContentLoaded', () => {
+  function updateActiveTab(type: ImageType) {
+    // すべてのタブからアクティブクラスを削除
+    document.querySelectorAll('.tab').forEach((tab) => {
+      tab.classList.remove('tab-active');
+    });
     // 現在のタイプのタブをアクティブにする
-    const activeTab = document.querySelector(`[data-type="${currentType}"]`);
+    const activeTab = document.querySelector(`[data-type="${type}"]`)?.closest('.tab');
     if (activeTab) {
       activeTab.classList.add('tab-active');
     }
+  }
 
-    // すべての画像コンテナを更新
-    document.querySelectorAll('.pattern-container').forEach((container) => {
-      const images = container.querySelectorAll('img[data-type]');
-      images.forEach((img) => {
-        if (img.getAttribute('data-type') === currentType) {
-          img.classList.remove('hidden');
-        } else {
-          img.classList.add('hidden');
-        }
-      });
-    });
+  // 初期状態を設定
+  document.addEventListener('DOMContentLoaded', () => {
+    updateActiveTab(imageTypeStore.get());
   });
 
   // クリックイベントの設定
   document.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => {
-      const type = tab.getAttribute('data-type') as typeof types[number];
+      const type = tab.querySelector('img')?.getAttribute('data-type') as ImageType;
       if (type) {
-        // すべてのタブからアクティブクラスを削除
-        document.querySelectorAll('.tab').forEach((t) => {
-          t.classList.remove('tab-active');
-        });
-        // クリックされたタブをアクティブにする
-        tab.classList.add('tab-active');
-        currentType = type;
+        // ストアを更新
+        imageTypeStore.set(type);
         
         // カスタムイベントを発火
         const event = new CustomEvent('imageTypeChange', {
           detail: { type }
         });
         document.dispatchEvent(event);
-        
-        setImageType(currentType);
       }
     });
+  });
+
+  // ストアの変更を監視
+  imageTypeStore.subscribe((type) => {
+    updateActiveTab(type);
   });
 </script> 
