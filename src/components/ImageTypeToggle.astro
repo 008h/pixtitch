@@ -7,10 +7,10 @@ import patternIcon from '../assets/images/switch_pattern.svg?url';
 const currentType = imageTypeStore.get();
 ---
 
-<button id="image-type-toggle" class="flex items-center gap-x-4 p-4 cursor-pointer border-2 rounded-lg backdrop-blur-lg">
-  <img src={crossStitchIcon} alt="クロスステッチ" class="w-6 h-6" data-type="stitch" />
-  <img src={pixelIcon} alt="ピクセルアート" class="w-6 h-6" data-type="pixel" />
-  <img src={patternIcon} alt="パターン" class="w-6 h-6" data-type="pattern" />
+<button id="image-type-toggle" class="group flex items-center gap-x-4 p-4 cursor-pointer border-2 rounded-lg backdrop-blur-lg select-none">
+  <img src={crossStitchIcon} alt="クロスステッチ" class="w-6 h-6 transition-all duration-200 select-none" data-type="stitch" />
+  <img src={pixelIcon} alt="ピクセルアート" class="w-6 h-6 transition-all duration-200 select-none" data-type="pixel" />
+  <img src={patternIcon} alt="パターン" class="w-6 h-6 transition-all duration-200 select-none" data-type="pattern" />
 </button>
 
 <script>
