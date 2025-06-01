@@ -32,8 +32,8 @@ const currentType = imageTypeStore.get();
   <img
     src={crossStitchPath}
     alt={`${title} / cross stitch like`}
-    class={`${containerStyle} ${currentType === 'cross-stitch' ? '' : 'hidden'}`}
-    data-type="cross-stitch"
+    class={`${containerStyle} ${currentType === 'stitch' ? '' : 'hidden'}`}
+    data-type="stitch"
   />
   <img
     src={pixelSvgPath}
@@ -52,7 +52,7 @@ const currentType = imageTypeStore.get();
 <script>
   import { imageTypeStore, type ImageType } from '../stores/imageType';
 
-  const types: ImageType[] = ['cross-stitch', 'pixel', 'pattern'];
+  const types: ImageType[] = ['stitch', 'pixel', 'pattern'];
 
   // クリックイベントの設定
   document.querySelectorAll('.pattern-container').forEach((container) => {

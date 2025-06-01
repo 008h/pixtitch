@@ -7,37 +7,24 @@ import patternIcon from '../assets/images/switch_pattern.svg?url';
 const currentType = imageTypeStore.get();
 ---
 
-<div class="tabs tabs-boxed fixed bottom-4 right-4">
-  <button
-    id="type-cross-stitch"
-    class="tab flex items-center gap-1"
-    aria-label="クロスステッチ"
-  >
-    <img src={crossStitchIcon} alt="クロスステッチ" class="w-8 h-8" data-type="cross-stitch" />
-    <span class="text-xs">stitch</span>
-  </button>
-  <button
-    id="type-pixel"
-    class="tab flex items-center gap-1"
-    aria-label="ピクセルアート"
-  >
-    <img src={pixelIcon} alt="ピクセルアート" class="w-8 h-8" data-type="pixel" />
-    <span class="text-xs">pixel</span>
-  </button>
-  <button
-    id="type-pattern"
-    class="tab flex items-center gap-1"
-    aria-label="パターン"
-  >
-    <img src={patternIcon} alt="パターン" class="w-8 h-8" data-type="pattern" />
-    <span class="text-xs">pattern</span>
-  </button>
+<div class="fixed bottom-4 right-4">
+  <div class="tabs tabs-boxed">
+    <div class="tab flex items-center gap-1 cursor-pointer">
+      <img src={crossStitchIcon} alt="クロスステッチ" class="w-8 h-8" data-type="stitch" />
+    </div>
+    <div class="tab flex items-center gap-1 cursor-pointer">
+      <img src={pixelIcon} alt="ピクセルアート" class="w-8 h-8" data-type="pixel" />
+    </div>
+    <div class="tab flex items-center gap-1 cursor-pointer">
+      <img src={patternIcon} alt="パターン" class="w-8 h-8" data-type="pattern" />
+    </div>
+  </div>
 </div>
 
 <script>
   import { imageTypeStore, type ImageType } from '../stores/imageType';
 
-  const types: ImageType[] = ['cross-stitch', 'pixel', 'pattern'];
+  const types: ImageType[] = ['stitch', 'pixel', 'pattern'];
 
   // 初期状態の設定
   function updateActiveTab(type: ImageType) {
@@ -58,21 +45,24 @@ const currentType = imageTypeStore.get();
   });
 
   // クリックイベントの設定
-  document.querySelectorAll('.tab').forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const type = tab.querySelector('img')?.getAttribute('data-type') as ImageType;
-      if (type) {
-        // ストアを更新
-        imageTypeStore.set(type);
-        
-        // カスタムイベントを発火
-        const event = new CustomEvent('imageTypeChange', {
-          detail: { type }
-        });
-        document.dispatchEvent(event);
-      }
+  const container = document.querySelector('.tabs');
+  if (container) {
+    container.addEventListener('click', () => {
+      const currentType = imageTypeStore.get();
+      const currentIndex = types.indexOf(currentType);
+      const nextIndex = (currentIndex + 1) % types.length;
+      const nextType = types[nextIndex];
+
+      // ストアを更新
+      imageTypeStore.set(nextType);
+      
+      // カスタムイベントを発火
+      const event = new CustomEvent('imageTypeChange', {
+        detail: { type: nextType }
+      });
+      document.dispatchEvent(event);
     });
-  });
+  }
 
   // ストアの変更を監視
   imageTypeStore.subscribe((type) => {
