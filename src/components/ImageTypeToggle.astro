@@ -7,45 +7,19 @@ import patternIcon from '../assets/images/switch_pattern.svg?url';
 const currentType = imageTypeStore.get();
 ---
 
-<div class="fixed bottom-4 right-4">
-  <div class="tabs tabs-boxed">
-    <div class="tab flex items-center gap-1 cursor-pointer">
-      <img src={crossStitchIcon} alt="クロスステッチ" class="w-8 h-8" data-type="stitch" />
-    </div>
-    <div class="tab flex items-center gap-1 cursor-pointer">
-      <img src={pixelIcon} alt="ピクセルアート" class="w-8 h-8" data-type="pixel" />
-    </div>
-    <div class="tab flex items-center gap-1 cursor-pointer">
-      <img src={patternIcon} alt="パターン" class="w-8 h-8" data-type="pattern" />
-    </div>
-  </div>
-</div>
+<button id="image-type-toggle" class="flex items-end gap-x-2 px-4 py-2 cursor-pointer border-2 rounded-lg">
+  <img src={crossStitchIcon} alt="クロスステッチ" class="w-5 h-5" data-type="stitch" />
+  <img src={pixelIcon} alt="ピクセルアート" class="w-5 h-5" data-type="pixel" />
+  <img src={patternIcon} alt="パターン" class="w-5 h-5" data-type="pattern" />
+</button>
 
 <script>
   import { imageTypeStore, type ImageType } from '../stores/imageType';
 
   const types: ImageType[] = ['stitch', 'pixel', 'pattern'];
 
-  // 初期状態の設定
-  function updateActiveTab(type: ImageType) {
-    // すべてのタブからアクティブクラスを削除
-    document.querySelectorAll('.tab').forEach((tab) => {
-      tab.classList.remove('tab-active');
-    });
-    // 現在のタイプのタブをアクティブにする
-    const activeTab = document.querySelector(`[data-type="${type}"]`)?.closest('.tab');
-    if (activeTab) {
-      activeTab.classList.add('tab-active');
-    }
-  }
-
-  // 初期状態を設定
-  document.addEventListener('DOMContentLoaded', () => {
-    updateActiveTab(imageTypeStore.get());
-  });
-
   // クリックイベントの設定
-  const container = document.querySelector('.tabs');
+  const container = document.getElementById('image-type-toggle');
   if (container) {
     container.addEventListener('click', () => {
       const currentType = imageTypeStore.get();
@@ -64,8 +38,15 @@ const currentType = imageTypeStore.get();
     });
   }
 
-  // ストアの変更を監視
+  // ストアの変更を監視して画像のサイズを更新
   imageTypeStore.subscribe((type) => {
-    updateActiveTab(type);
+    const images = document.querySelectorAll('#image-type-toggle img');
+    images.forEach((img) => {
+      const imgType = img.getAttribute('data-type');
+      img.classList.toggle('w-8', imgType === type);
+      img.classList.toggle('h-8', imgType === type);
+      img.classList.toggle('w-5', imgType !== type);
+      img.classList.toggle('h-5', imgType !== type);
+    });
   });
-</script> 
+</script>

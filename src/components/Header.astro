@@ -10,7 +10,7 @@ interface Props {
 const { showDescription = false, title } = Astro.props;
 ---
 
-<header class="sticky top-0 border-base-300">
+<header class="sticky top-0 border-base-300 z-10">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
       <div>
         <h1>
@@ -29,6 +29,9 @@ const { showDescription = false, title } = Astro.props;
           pixtitch is an ongoing project by Hiroshi Ohba, exploring the intersection of pixel art and embroidery.
         </p>
       )}
-      <ThemeToggle />
+      <div class="flex items-center gap-x-6">
+        <ImageTypeToggle />
+        <ThemeToggle />
+      </div>
     </div>
 </header>
