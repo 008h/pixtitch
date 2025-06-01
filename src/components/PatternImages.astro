@@ -33,19 +33,19 @@ const currentType = getCurrentImageType();
     src={crossStitchPath}
     alt={`${title} / cross stitch like`}
     class={`${containerStyle} ${currentType === 'cross-stitch' ? '' : 'hidden'}`}
-    data-pattern-type="cross-stitch"
+    data-type="cross-stitch"
   />
   <img
     src={pixelSvgPath}
     alt={`${title} / pixel art`}
     class={`${containerStyle} ${currentType === 'pixel' ? '' : 'hidden'}`}
-    data-pattern-type="pixel"
+    data-type="pixel"
   />
   <img
     src={patternSvgPath}
     alt={`${title} / pattern`}
     class={`${containerStyle} ${currentType === 'pattern' ? '' : 'hidden'}`}
-    data-pattern-type="pattern"
+    data-type="pattern"
   />
 </div>
 
@@ -74,9 +74,9 @@ const currentType = getCurrentImageType();
         document.dispatchEvent(event);
 
         // すべての画像を非表示にしてから、現在のタイプの画像のみを表示
-        const images = container.querySelectorAll('img[data-pattern-type]');
+        const images = container.querySelectorAll('img[data-type]');
         images.forEach((img) => {
-          if (img.getAttribute('data-pattern-type') === currentType) {
+          if (img.getAttribute('data-type') === currentType) {
             img.classList.remove('hidden');
           } else {
             img.classList.add('hidden');

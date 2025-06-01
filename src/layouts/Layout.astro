@@ -72,9 +72,9 @@ const currentTheme = getCurrentTheme();
 							
 							// すべての画像コンテナを更新
 							document.querySelectorAll('.pattern-container').forEach((container) => {
-								const images = container.querySelectorAll('img[data-pattern-type]');
+								const images = container.querySelectorAll('img[data-type]');
 								images.forEach((img) => {
-									if (img.getAttribute('data-pattern-type') === currentImageType) {
+									if (img.getAttribute('data-type') === currentImageType) {
 										img.classList.remove('hidden');
 									} else {
 										img.classList.add('hidden');
@@ -139,9 +139,9 @@ const currentTheme = getCurrentTheme();
 
 					// 画像の表示状態を更新
 					document.querySelectorAll('.pattern-container').forEach((container) => {
-						const images = container.querySelectorAll('img[data-pattern-type]');
+						const images = container.querySelectorAll('img[data-type]');
 						images.forEach((img) => {
-							if (img.getAttribute('data-pattern-type') === currentImageType) {
+							if (img.getAttribute('data-type') === currentImageType) {
 								img.classList.remove('hidden');
 							} else {
 								img.classList.add('hidden');

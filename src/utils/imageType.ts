@@ -21,9 +21,9 @@ export const setImageType = (type: ImageType): void => {
   localStorage.setItem('imageType', type);
   // すべての画像コンテナを更新
   document.querySelectorAll('.pattern-container').forEach((container) => {
-    const images = container.querySelectorAll('img[data-pattern-type]');
+    const images = container.querySelectorAll('img[data-type]');
     images.forEach((img) => {
-      if (img.getAttribute('data-pattern-type') === type) {
+      if (img.getAttribute('data-type') === type) {
         img.classList.remove('hidden');
       } else {
         img.classList.add('hidden');

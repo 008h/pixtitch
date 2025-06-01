@@ -17,6 +17,6 @@
 @tailwind utilities;
 
 /* ダークモード時のパターンSVG反転 */
-[data-theme="dark"] img[data-pattern-type="pattern"] {
+[data-theme="dark"] img[data-type="pattern"] {
   filter: invert(100%);
 }
