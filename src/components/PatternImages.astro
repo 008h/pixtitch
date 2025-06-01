@@ -19,7 +19,7 @@ const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.sv
 // スタイルを条件付きで設定
 const containerStyle = isDetailPage 
   ? 'w-full' 
-  : `w-[calc(var(--pattern-scale)*${x}rem)] h-[calc(var(--pattern-scale)*${y}rem)]`;
+  : `w-${x} h-${y}`;
 
 // 現在の画像タイプを取得
 const currentType = imageTypeStore.get();

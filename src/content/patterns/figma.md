@@ -2,6 +2,6 @@
 title: "Figma"
 description: ""
 pubDate: 2023-09-25
-x: 16
-y: 16
+x: 24
+y: 24
 ---

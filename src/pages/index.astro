@@ -12,10 +12,10 @@ const sortedArticles = articles.sort((a, b) => {
 
 <Layout title="Pixtitch">
   <main>
-    <ol class="flex flex-wrap gap-12 items-center">
+    <ol class="flex flex-wrap gap-12 items-center justify-center">
       {sortedArticles.map((article) => (
         <li>
-            <a href={`${import.meta.env.BASE_URL}${article.id.replace('.md', '')}`} class="block">
+            <a href={`${import.meta.env.BASE_URL}${article.id.replace('.md', '')}`} class="block p-2 border border-base-300 rounded-lg">
               <PatternImages 
                 baseName={article.id.replace('.md', '')} 
                 title={article.data.title}
