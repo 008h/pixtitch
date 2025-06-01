@@ -16,17 +16,11 @@
     "jsdom": "^26.1.0"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^6.0.2",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "daisyui": "^5.0.37",
-    "lucide-react": "^0.511.0",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
-    "tailwind-merge": "^3.3.0",
-    "tailwindcss": "^4.1.6",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss": "^4.1.6"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.40.2"
