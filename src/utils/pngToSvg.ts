@@ -1,0 +1,393 @@
+import getPixels from 'get-pixels';
+import rgb2hex from 'rgb2hex';
+import { PNG } from 'pngjs';
+
+export interface PixelData {
+  width: number;
+  height: number;
+  pixels: Uint8Array;
+  channels: number;
+}
+
+/**
+ * PNGバッファをピクセルデータに変換（get-pixels使用）
+ */
+export function getPixelsFromBuffer(buffer: Buffer): Promise<PixelData> {
+  return new Promise((resolve, reject) => {
+    getPixels(buffer, (err, pixels) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      
+      resolve({
+        width: pixels.shape[0],
+        height: pixels.shape[1],
+        pixels: pixels.data,
+        channels: pixels.shape[2]
+      });
+    });
+  });
+}
+
+/**
+ * PNGバッファをピクセルデータに変換（pngjs使用）
+ */
+export function getPixelsFromBufferPngjs(buffer: Buffer): Promise<PixelData> {
+  return new Promise((resolve, reject) => {
+    try {
+      const png = PNG.sync.read(buffer);
+      
+      resolve({
+        width: png.width,
+        height: png.height,
+        pixels: png.data,
+        channels: 4 // PNGは常にRGBA
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+/**
+ * RGB値を16進数カラーコードに変換
+ */
+export function rgbToHex(r: number, g: number, b: number): string {
+  try {
+    const result = rgb2hex(`rgb(${r},${g},${b})`);
+    return result.hex;
+  } catch (error) {
+    // フォールバック: 手動で16進数に変換
+    const toHex = (n: number) => n.toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+}
+
+/**
+ * RGB値をグレースケール値に変換
+ */
+export function rgbToGrayscale(r: number, g: number, b: number): number {
+  // 標準的なグレースケール変換式
+  return Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+}
+
+/**
+ * グレースケール値を16進数カラーコードに変換
+ */
+export function grayscaleToHex(gray: number): string {
+  const hex = gray.toString(16).padStart(2, '0');
+  return `#${hex}${hex}${hex}`;
+}
+
+/**
+ * PNGをピクセルアート風のSVGに変換
+ */
+export function convertPixelsToPixelArtSvg(pixelData: PixelData): string {
+  const { width, height, pixels, channels } = pixelData;
+  
+  let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">\n`;
+  svg += `  <defs>\n`;
+  svg += `    <style>\n`;
+  svg += `      .pixel { shape-rendering: pixelated; }\n`;
+  svg += `    </style>\n`;
+  svg += `  </defs>\n`;
+  
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * channels;
+      const r = pixels[index];
+      const g = pixels[index + 1];
+      const b = pixels[index + 2];
+      const a = channels > 3 ? pixels[index + 3] : 255;
+      
+      // 透明ピクセルはスキップ
+      if (a === 0) continue;
+      
+      const hex = rgbToHex(r, g, b);
+      svg += `  <rect x="${x}" y="${y}" width="1" height="1" fill="${hex}" class="pixel" />\n`;
+    }
+  }
+  
+  svg += '</svg>';
+  return svg;
+}
+
+/**
+ * PNGをグレースケールのピクセルアート風SVGに変換
+ */
+export function convertPixelsToGrayscalePixelArtSvg(pixelData: PixelData): string {
+  const { width, height, pixels, channels } = pixelData;
+  
+  let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">\n`;
+  svg += `  <defs>\n`;
+  svg += `    <style>\n`;
+  svg += `      .pixel { shape-rendering: pixelated; }\n`;
+  svg += `    </style>\n`;
+  svg += `  </defs>\n`;
+  
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * channels;
+      const r = pixels[index];
+      const g = pixels[index + 1];
+      const b = pixels[index + 2];
+      const a = channels > 3 ? pixels[index + 3] : 255;
+      
+      // 透明ピクセルはスキップ
+      if (a === 0) continue;
+      
+      const gray = rgbToGrayscale(r, g, b);
+      const hex = grayscaleToHex(gray);
+      svg += `  <rect x="${x}" y="${y}" width="1" height="1" fill="${hex}" class="pixel" />\n`;
+    }
+  }
+  
+  svg += '</svg>';
+  return svg;
+}
+
+/**
+ * PNGをクロスステッチ風のSVGに変換
+ */
+export function convertPixelsToCrossStitchSvg(pixelData: PixelData): string {
+  const { width, height, pixels, channels } = pixelData;
+  
+  let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
+  svg += `  <defs>\n`;
+  svg += `    <style>\n`;
+  svg += `      .stitch { stroke: #000; stroke-width: 0.1; }\n`;
+  svg += `    </style>\n`;
+  svg += `  </defs>\n`;
+  
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * channels;
+      const r = pixels[index];
+      const g = pixels[index + 1];
+      const b = pixels[index + 2];
+      const a = channels > 3 ? pixels[index + 3] : 255;
+      
+      // 透明ピクセルはスキップ
+      if (a === 0) continue;
+      
+      const hex = rgbToHex(r, g, b);
+      const centerX = x * 2 + 1;
+      const centerY = y * 2 + 1;
+      
+      // クロスステッチのXマークを描画
+      svg += `  <line x1="${centerX - 0.5}" y1="${centerY - 0.5}" x2="${centerX + 0.5}" y2="${centerY + 0.5}" stroke="${hex}" class="stitch" />\n`;
+      svg += `  <line x1="${centerX + 0.5}" y1="${centerY - 0.5}" x2="${centerX - 0.5}" y2="${centerY + 0.5}" stroke="${hex}" class="stitch" />\n`;
+    }
+  }
+  
+  svg += '</svg>';
+  return svg;
+}
+
+/**
+ * PNGをグレースケールのクロスステッチ風SVGに変換
+ */
+export function convertPixelsToGrayscaleCrossStitchSvg(pixelData: PixelData): string {
+  const { width, height, pixels, channels } = pixelData;
+  
+  let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
+  svg += `  <defs>\n`;
+  svg += `    <style>\n`;
+  svg += `      .stitch { stroke: #000; stroke-width: 0.1; }\n`;
+  svg += `    </style>\n`;
+  svg += `  </defs>\n`;
+  
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * channels;
+      const r = pixels[index];
+      const g = pixels[index + 1];
+      const b = pixels[index + 2];
+      const a = channels > 3 ? pixels[index + 3] : 255;
+      
+      // 透明ピクセルはスキップ
+      if (a === 0) continue;
+      
+      const gray = rgbToGrayscale(r, g, b);
+      const hex = grayscaleToHex(gray);
+      const centerX = x * 2 + 1;
+      const centerY = y * 2 + 1;
+      
+      // クロスステッチのXマークを描画
+      svg += `  <line x1="${centerX - 0.5}" y1="${centerY - 0.5}" x2="${centerX + 0.5}" y2="${centerY + 0.5}" stroke="${hex}" class="stitch" />\n`;
+      svg += `  <line x1="${centerX + 0.5}" y1="${centerY - 0.5}" x2="${centerX - 0.5}" y2="${centerY + 0.5}" stroke="${hex}" class="stitch" />\n`;
+    }
+  }
+  
+  svg += '</svg>';
+  return svg;
+}
+
+/**
+ * PNGをパターン風のSVGに変換（記号ベース）
+ */
+export function convertPixelsToPatternSvg(pixelData: PixelData): string {
+  const { width, height, pixels, channels } = pixelData;
+  
+  // 色を記号にマッピング
+  const colorToSymbol: { [key: string]: string } = {
+    '#000000': '●', // 黒
+    '#FFFFFF': '○', // 白
+    '#FF0000': '■', // 赤
+    '#00FF00': '▲', // 緑
+    '#0000FF': '◆', // 青
+    '#FFFF00': '★', // 黄
+    '#FF00FF': '♦', // マゼンタ
+    '#00FFFF': '♠', // シアン
+  };
+  
+  let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
+  svg += `  <defs>\n`;
+  svg += `    <style>\n`;
+  svg += `      .symbol { font-family: monospace; font-size: 1.5px; text-anchor: middle; dominant-baseline: middle; }\n`;
+  svg += `    </style>\n`;
+  svg += `  </defs>\n`;
+  
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * channels;
+      const r = pixels[index];
+      const g = pixels[index + 1];
+      const b = pixels[index + 2];
+      const a = channels > 3 ? pixels[index + 3] : 255;
+      
+      // 透明ピクセルはスキップ
+      if (a === 0) continue;
+      
+      const hex = rgbToHex(r, g, b);
+      const symbol = colorToSymbol[hex] || '●'; // デフォルトは黒丸
+      const centerX = x * 2 + 1;
+      const centerY = y * 2 + 1;
+      
+      svg += `  <text x="${centerX}" y="${centerY}" fill="${hex}" class="symbol">${symbol}</text>\n`;
+    }
+  }
+  
+  svg += '</svg>';
+  return svg;
+}
+
+/**
+ * PNGをグレースケールのパターン風SVGに変換（記号ベース）
+ */
+export function convertPixelsToGrayscalePatternSvg(pixelData: PixelData): string {
+  const { width, height, pixels, channels } = pixelData;
+  
+  // グレースケール値を記号にマッピング
+  const grayscaleToSymbol: { [key: string]: string } = {
+    '#000000': '●', // 黒
+    '#1A1A1A': '◆', // 暗いグレー
+    '#333333': '■', // グレー
+    '#4D4D4D': '▲', // 明るいグレー
+    '#666666': '♦', // さらに明るいグレー
+    '#808080': '★', // 中間グレー
+    '#999999': '♠', // 明るいグレー
+    '#B3B3B3': '○', // さらに明るいグレー
+    '#CCCCCC': '◇', // 薄いグレー
+    '#E6E6E6': '△', // とても薄いグレー
+    '#FFFFFF': '□', // 白
+  };
+  
+  let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
+  svg += `  <defs>\n`;
+  svg += `    <style>\n`;
+  svg += `      .symbol { font-family: monospace; font-size: 1.5px; text-anchor: middle; dominant-baseline: middle; }\n`;
+  svg += `    </style>\n`;
+  svg += `  </defs>\n`;
+  
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * channels;
+      const r = pixels[index];
+      const g = pixels[index + 1];
+      const b = pixels[index + 2];
+      const a = channels > 3 ? pixels[index + 3] : 255;
+      
+      // 透明ピクセルはスキップ
+      if (a === 0) continue;
+      
+      const gray = rgbToGrayscale(r, g, b);
+      const hex = grayscaleToHex(gray);
+      const symbol = grayscaleToSymbol[hex] || '●'; // デフォルトは黒丸
+      const centerX = x * 2 + 1;
+      const centerY = y * 2 + 1;
+      
+      svg += `  <text x="${centerX}" y="${centerY}" fill="${hex}" class="symbol">${symbol}</text>\n`;
+    }
+  }
+  
+  svg += '</svg>';
+  return svg;
+}
+
+/**
+ * メイン変換関数：PNGバッファから3つのSVG形式を生成（カラー版）
+ */
+export async function convertPngToSvgs(pngBuffer: Buffer): Promise<{
+  pixel: string;
+  stitch: string;
+  pattern: string;
+}> {
+  try {
+    // まずpngjsで試行
+    const pixelData = await getPixelsFromBufferPngjs(pngBuffer);
+    
+    return {
+      pixel: convertPixelsToPixelArtSvg(pixelData),
+      stitch: convertPixelsToCrossStitchSvg(pixelData),
+      pattern: convertPixelsToPatternSvg(pixelData)
+    };
+  } catch (error) {
+    // pngjsが失敗した場合はget-pixelsで試行
+    try {
+      const pixelData = await getPixelsFromBuffer(pngBuffer);
+      
+      return {
+        pixel: convertPixelsToPixelArtSvg(pixelData),
+        stitch: convertPixelsToCrossStitchSvg(pixelData),
+        pattern: convertPixelsToPatternSvg(pixelData)
+      };
+    } catch (fallbackError) {
+      throw new Error(`PNG変換エラー: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+}
+
+/**
+ * メイン変換関数：PNGバッファから3つのSVG形式を生成（グレースケール版）
+ */
+export async function convertPngToGrayscaleSvgs(pngBuffer: Buffer): Promise<{
+  pixel: string;
+  stitch: string;
+  pattern: string;
+}> {
+  try {
+    // まずpngjsで試行
+    const pixelData = await getPixelsFromBufferPngjs(pngBuffer);
+    
+    return {
+      pixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
+      stitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData),
+      pattern: convertPixelsToGrayscalePatternSvg(pixelData)
+    };
+  } catch (error) {
+    // pngjsが失敗した場合はget-pixelsで試行
+    try {
+      const pixelData = await getPixelsFromBuffer(pngBuffer);
+      
+      return {
+        pixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
+        stitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData),
+        pattern: convertPixelsToGrayscalePatternSvg(pixelData)
+      };
+    } catch (fallbackError) {
+      throw new Error(`PNG変換エラー: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+}
