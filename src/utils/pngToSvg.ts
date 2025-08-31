@@ -240,28 +240,13 @@ export function convertPixelsToGrayscaleCrossStitchSvg(pixelData: PixelData): st
 
 /**
  * PNGをパターン風のSVGに変換（記号ベース）
+ * Processingのコードを参考に、色の使用頻度に基づいて記号を選択
  */
 export function convertPixelsToPatternSvg(pixelData: PixelData): string {
   const { width, height, pixels, channels } = pixelData;
   
-  // 色を記号にマッピング
-  const colorToSymbol: { [key: string]: string } = {
-    '#000000': '●', // 黒
-    '#FFFFFF': '○', // 白
-    '#FF0000': '■', // 赤
-    '#00FF00': '▲', // 緑
-    '#0000FF': '◆', // 青
-    '#FFFF00': '★', // 黄
-    '#FF00FF': '♦', // マゼンタ
-    '#00FFFF': '♠', // シアン
-  };
-  
-  let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
-  svg += `  <defs>\n`;
-  svg += `    <style>\n`;
-  svg += `      .symbol { font-family: monospace; font-size: 1.5px; text-anchor: middle; dominant-baseline: middle; }\n`;
-  svg += `    </style>\n`;
-  svg += `  </defs>\n`;
+  // 色の使用頻度をカウント
+  const colorCounts = new Map<string, number>();
   
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -271,42 +256,48 @@ export function convertPixelsToPatternSvg(pixelData: PixelData): string {
       const b = pixels[index + 2];
       const a = channels > 3 ? pixels[index + 3] : 255;
       
-      // 透明ピクセルはスキップ
       if (a === 0) continue;
       
       const hex = rgbToHex(r, g, b);
-      const symbol = colorToSymbol[hex] || '●'; // デフォルトは黒丸
-      const centerX = x * 2 + 1;
-      const centerY = y * 2 + 1;
-      
-      svg += `  <text x="${centerX}" y="${centerY}" fill="${hex}" class="symbol">${symbol}</text>\n`;
+      colorCounts.set(hex, (colorCounts.get(hex) || 0) + 1);
     }
   }
   
-  svg += '</svg>';
-  return svg;
-}
-
-/**
- * PNGをグレースケールのパターン風SVGに変換（記号ベース）
- */
-export function convertPixelsToGrayscalePatternSvg(pixelData: PixelData): string {
-  const { width, height, pixels, channels } = pixelData;
+  // 使用頻度の中央値を計算
+  const counts = Array.from(colorCounts.values());
+  counts.sort((a, b) => a - b);
+  const median = counts[Math.floor(counts.length / 2)];
   
-  // グレースケール値を記号にマッピング
-  const grayscaleToSymbol: { [key: string]: string } = {
-    '#000000': '●', // 黒
-    '#1A1A1A': '◆', // 暗いグレー
-    '#333333': '■', // グレー
-    '#4D4D4D': '▲', // 明るいグレー
-    '#666666': '♦', // さらに明るいグレー
-    '#808080': '★', // 中間グレー
-    '#999999': '♠', // 明るいグレー
-    '#B3B3B3': '○', // さらに明るいグレー
-    '#CCCCCC': '◇', // 薄いグレー
-    '#E6E6E6': '△', // とても薄いグレー
-    '#FFFFFF': '□', // 白
-  };
+  // 記号の定義（Processingのコードを参考）
+  // 線記号：使用頻度が高い色に使用
+  const lineSymbols = ['●', '◆', '■', '▲', '♦', '★', '♠', '○', '◇', '△', '□'];
+  // 塗り記号：使用頻度が低い色に使用
+  const fillSymbols = ['●', '◆', '■', '▲', '♦', '★', '♠', '○', '◇', '△', '□'];
+  
+  // 記号の配列をシャッフル（Processingのコードを参考）
+  const shuffledLineSymbols = [...lineSymbols].sort(() => Math.random() - 0.5);
+  const shuffledFillSymbols = [...fillSymbols].sort(() => Math.random() - 0.5);
+  
+  // 色を記号にマッピング（使用頻度に基づいて線記号か塗り記号かを選択）
+  const colorToSymbol = new Map<string, string>();
+  let lineIndex = 0;
+  let fillIndex = 0;
+  
+  // 色を使用頻度でソート（高い順）
+  const sortedColors = Array.from(colorCounts.entries())
+    .sort((a, b) => b[1] - a[1]);
+  
+  for (const [color, count] of sortedColors) {
+    if (count >= median) {
+      // 使用頻度が高い色には線記号を使用
+      colorToSymbol.set(color, shuffledLineSymbols[lineIndex % shuffledLineSymbols.length]);
+      lineIndex++;
+    } else {
+      // 使用頻度が低い色には塗り記号を使用
+      colorToSymbol.set(color, shuffledFillSymbols[fillIndex % shuffledFillSymbols.length]);
+      fillIndex++;
+    }
+  }
   
   let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
   svg += `  <defs>\n`;
@@ -323,16 +314,15 @@ export function convertPixelsToGrayscalePatternSvg(pixelData: PixelData): string
       const b = pixels[index + 2];
       const a = channels > 3 ? pixels[index + 3] : 255;
       
-      // 透明ピクセルはスキップ
       if (a === 0) continue;
       
-      const gray = rgbToGrayscale(r, g, b);
-      const hex = grayscaleToHex(gray);
-      const symbol = grayscaleToSymbol[hex] || '●'; // デフォルトは黒丸
+      const hex = rgbToHex(r, g, b);
+      const symbol = colorToSymbol.get(hex) || '●';
       const centerX = x * 2 + 1;
       const centerY = y * 2 + 1;
       
-      svg += `  <text x="${centerX}" y="${centerY}" fill="${hex}" class="symbol">${symbol}</text>\n`;
+      // 記号の色はすべて#000000（黒）に統一
+      svg += `  <text x="${centerX}" y="${centerY}" fill="#000000" class="symbol">${symbol}</text>\n`;
     }
   }
   
@@ -379,7 +369,6 @@ export async function convertPngToSvgs(pngBuffer: Buffer): Promise<{
 export async function convertPngToGrayscaleSvgs(pngBuffer: Buffer): Promise<{
   pixel: string;
   stitch: string;
-  pattern: string;
 }> {
   try {
     // まずpngjsで試行
@@ -387,8 +376,7 @@ export async function convertPngToGrayscaleSvgs(pngBuffer: Buffer): Promise<{
     
     return {
       pixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
-      stitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData),
-      pattern: convertPixelsToGrayscalePatternSvg(pixelData)
+      stitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData)
     };
   } catch (error) {
     // pngjsが失敗した場合はget-pixelsで試行
@@ -397,8 +385,7 @@ export async function convertPngToGrayscaleSvgs(pngBuffer: Buffer): Promise<{
       
       return {
         pixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
-        stitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData),
-        pattern: convertPixelsToGrayscalePatternSvg(pixelData)
+        stitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData)
       };
     } catch (fallbackError) {
       throw new Error(`PNG変換エラー: ${error instanceof Error ? error.message : 'Unknown error'}`);
