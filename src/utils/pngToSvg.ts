@@ -108,7 +108,7 @@ export function convertPixelsToPixelArtSvg(pixelData: PixelData): string {
       const pixelSize = 20; // 20x20のピクセルサイズ
       const pixelX = x * pixelSize;
       const pixelY = y * pixelSize;
-      svg += `  <rect x="${pixelX}" y="${pixelY}" width="${pixelSize}" height="${pixelSize}" fill="${hex}" class="pixel" />\n`;
+      svg += `  <rect x="${pixelX}" y="${pixelY}" width="${pixelSize}" height="${pixelSize}" fill="${hex}" stroke="#b4b4b4" class="pixel" />\n`;
     }
   }
   
