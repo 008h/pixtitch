@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "watch:png": "tsx src/scripts/watchPng.ts"
+    "watch:png": "tsx src/scripts/watchPng.ts",
+    "grayscale": "tsx src/scripts/convertToGrayscale.ts"
   },
   "dependencies": {
     "@nanostores/react": "^1.0.0",

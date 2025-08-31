@@ -406,9 +406,45 @@ async function executePngConversion<T>(
 }
 
 /**
- * メイン変換関数：PNGバッファから5つのSVG形式を生成
+ * メイン変換関数：PNGバッファから3つのSVG形式を生成（カラー版のみ）
  */
-export async function convertPngToSvgs(pngBuffer: Buffer): Promise<SvgConversionResult> {
+export async function convertPngToSvgs(pngBuffer: Buffer): Promise<{
+  pixel: string;
+  stitch: string;
+  pattern: string;
+}> {
+  const pixelData = await executePngConversion(
+    (data) => data,
+    pngBuffer
+  );
+  
+  return {
+    pixel: convertPixelsToPixelArtSvg(pixelData),
+    stitch: convertPixelsToCrossStitchSvg(pixelData),
+    pattern: convertPixelsToPatternSvg(pixelData)
+  };
+}
+
+/**
+ * グレースケール専用変換関数：PNGバッファから2つのグレースケールSVG形式を生成
+ */
+export async function convertPngToGrayscaleSvgs(pngBuffer: Buffer): Promise<GrayscaleSvgConversionResult> {
+  const pixelData = await executePngConversion(
+    (data) => data,
+    pngBuffer
+  );
+  
+  return {
+    pixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
+    stitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData)
+  };
+}
+
+/**
+ * 全形式変換関数：PNGバッファから5つのSVG形式を生成（カラー版 + グレースケール版）
+ * 必要に応じて使用する場合のための関数
+ */
+export async function convertPngToAllSvgs(pngBuffer: Buffer): Promise<SvgConversionResult> {
   const pixelData = await executePngConversion(
     (data) => data,
     pngBuffer
@@ -420,20 +456,5 @@ export async function convertPngToSvgs(pngBuffer: Buffer): Promise<SvgConversion
     pattern: convertPixelsToPatternSvg(pixelData),
     grayscalePixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
     grayscaleStitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData)
-  };
-}
-
-/**
- * メイン変換関数：PNGバッファから2つのグレースケールSVG形式を生成
- */
-export async function convertPngToGrayscaleSvgs(pngBuffer: Buffer): Promise<GrayscaleSvgConversionResult> {
-  const pixelData = await executePngConversion(
-    (data) => data,
-    pngBuffer
-  );
-  
-  return {
-    pixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
-    stitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData)
   };
 }

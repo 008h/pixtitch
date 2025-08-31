@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
-import path from 'node:path';
-import { convertPngToSvgs, convertPngToGrayscaleSvgs } from '../utils/pngToSvg';
+import path from 'path';
+import { convertPngToSvgs } from '../utils/pngToSvg';
 
 async function testPngConversion() {
   try {
@@ -33,13 +33,6 @@ async function testPngConversion() {
     console.log(`- Stitch: ${colorSvgs.stitch.length} characters`);
     console.log(`- Pattern: ${colorSvgs.pattern.length} characters`);
     
-    // グレースケール版の変換
-    console.log('\n=== グレースケール版変換 ===');
-    const grayscaleSvgs = await convertPngToGrayscaleSvgs(pngBuffer);
-    console.log('変換完了:');
-    console.log(`- Pixel: ${grayscaleSvgs.pixel.length} characters`);
-    console.log(`- Stitch: ${grayscaleSvgs.stitch.length} characters`);
-    
     // テスト用のSVGファイルを出力
     const outputDir = path.join(process.cwd(), 'test_output');
     try {
@@ -53,11 +46,8 @@ async function testPngConversion() {
     await fs.writeFile(path.join(outputDir, `${baseName}_stitch.svg`), colorSvgs.stitch);
     await fs.writeFile(path.join(outputDir, `${baseName}_pattern.svg`), colorSvgs.pattern);
     
-    // グレースケール版SVGを保存（patternは除外）
-    await fs.writeFile(path.join(outputDir, `${baseName}_grayscale_pixel.svg`), grayscaleSvgs.pixel);
-    await fs.writeFile(path.join(outputDir, `${baseName}_grayscale_stitch.svg`), grayscaleSvgs.stitch);
-    
     console.log(`\nテスト完了！出力ファイルは ${outputDir} フォルダに保存されました。`);
+    console.log('グレースケール版が必要な場合は `npm run grayscale <PNGファイル名>` を使用してください。');
     
   } catch (error) {
     console.error('エラーが発生しました:', error);
