@@ -276,9 +276,9 @@ export function convertPixelsToPatternSvg(pixelData: PixelData): string {
   
   // 記号の定義（Processingのコードを参考）
   // 線記号：使用頻度が高い色に使用
-  const lineSymbols = ['●', '◆', '■', '▲', '♦', '★', '♠', '○', '◇', '△', '□'];
+  const lineSymbols = ['×', '+', '*', '○', '□', '◇', '△'];
   // 塗り記号：使用頻度が低い色に使用
-  const fillSymbols = ['●', '◆', '■', '▲', '♦', '★', '♠', '○', '◇', '△', '□'];
+  const fillSymbols = ['●', '■', '★', '◆', '▲'];
   
   // 記号の配列をシャッフル（Processingのコードを参考）
   const shuffledLineSymbols = [...lineSymbols].sort(() => Math.random() - 0.5);
@@ -312,6 +312,7 @@ export function convertPixelsToPatternSvg(pixelData: PixelData): string {
   svg += `    </style>\n`;
   svg += `  </defs>\n`;
   
+  // 記号を描画
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const index = (y * width + x) * channels;
@@ -325,12 +326,30 @@ export function convertPixelsToPatternSvg(pixelData: PixelData): string {
       const hex = rgbToHex(r, g, b);
       const symbol = colorToSymbol.get(hex) || '●';
       const symbolSize = 20; // 20x20の記号サイズ
-      const centerX = x * symbolSize + symbolSize / 2;
-      const centerY = y * symbolSize + symbolSize / 2;
+      // グリッドの中心に正確に配置（x=10, 30, 50... y=10, 30, 50...）
+      // SVGのtext要素の特性を考慮して微調整
+      const centerX = x * symbolSize + 10;
+      const centerY = y * symbolSize + 12; // テキストのベースライン調整
       
       // 記号の色はすべて#000000（黒）に統一
       svg += `  <text x="${centerX}" y="${centerY}" fill="#000000" class="symbol">${symbol}</text>\n`;
     }
+  }
+  
+  // グリッドを描画（present_pattern.svgを参考）
+  const gridSize = 20; // 20x20のグリッドサイズ
+  const gridColor = "#1c30d0"; // 青いグリッド線
+  
+  // 縦線を描画
+  for (let x = 0; x <= width; x++) {
+    const strokeWidth = (x === 0 || x === width) ? 2 : 1; // 外枠は太く
+    svg += `  <line x1="${x * gridSize}" y1="0" x2="${x * gridSize}" y2="${height * gridSize}" stroke="${gridColor}" stroke-width="${strokeWidth}"/>\n`;
+  }
+  
+  // 横線を描画
+  for (let y = 0; y <= height; y++) {
+    const strokeWidth = (y === 0 || y === height) ? 2 : 1; // 外枠は太く
+    svg += `  <line x1="0" y1="${y * gridSize}" x2="${width * gridSize}" y2="${y * gridSize}" stroke="${gridColor}" stroke-width="${strokeWidth}"/>\n`;
   }
   
   svg += '</svg>';
