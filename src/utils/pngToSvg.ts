@@ -145,7 +145,7 @@ export function convertPixelsToGrayscalePixelArtSvg(pixelData: PixelData): strin
       const pixelSize = 20; // 20x20のピクセルサイズ
       const pixelX = x * pixelSize;
       const pixelY = y * pixelSize;
-      svg += `  <rect x="${pixelX}" y="${pixelY}" width="${pixelSize}" height="${pixelSize}" fill="${hex}" class="pixel" />\n`;
+      svg += `  <rect x="${pixelX}" y="${pixelY}" width="${pixelSize}" height="${pixelSize}" fill="${hex}" class="pixel" stroke="#b4b4b4" />\n`;
     }
   }
   
@@ -357,12 +357,14 @@ export function convertPixelsToPatternSvg(pixelData: PixelData): string {
 }
 
 /**
- * メイン変換関数：PNGバッファから3つのSVG形式を生成（カラー版）
+ * メイン変換関数：PNGバッファから5つのSVG形式を生成（カラー版 + グレースケール版）
  */
 export async function convertPngToSvgs(pngBuffer: Buffer): Promise<{
   pixel: string;
   stitch: string;
   pattern: string;
+  grayscalePixel: string;
+  grayscaleStitch: string;
 }> {
   try {
     // まずpngjsで試行
@@ -371,7 +373,9 @@ export async function convertPngToSvgs(pngBuffer: Buffer): Promise<{
     return {
       pixel: convertPixelsToPixelArtSvg(pixelData),
       stitch: convertPixelsToCrossStitchSvg(pixelData),
-      pattern: convertPixelsToPatternSvg(pixelData)
+      pattern: convertPixelsToPatternSvg(pixelData),
+      grayscalePixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
+      grayscaleStitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData)
     };
   } catch (error) {
     // pngjsが失敗した場合はget-pixelsで試行
@@ -381,7 +385,9 @@ export async function convertPngToSvgs(pngBuffer: Buffer): Promise<{
       return {
         pixel: convertPixelsToPixelArtSvg(pixelData),
         stitch: convertPixelsToCrossStitchSvg(pixelData),
-        pattern: convertPixelsToPatternSvg(pixelData)
+        pattern: convertPixelsToPatternSvg(pixelData),
+        grayscalePixel: convertPixelsToGrayscalePixelArtSvg(pixelData),
+        grayscaleStitch: convertPixelsToGrayscaleCrossStitchSvg(pixelData)
       };
     } catch (fallbackError) {
       throw new Error(`PNG変換エラー: ${error instanceof Error ? error.message : 'Unknown error'}`);

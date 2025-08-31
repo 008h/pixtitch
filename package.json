@@ -7,7 +7,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "watch:png": "tsx src/scripts/watchPng.ts"
   },
   "dependencies": {
     "@nanostores/react": "^1.0.0",
@@ -27,7 +28,8 @@
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
-    "tailwindcss": "^4.1.6"
+    "tailwindcss": "^4.1.6",
+    "tsx": "^4.20.5"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.40.2"
