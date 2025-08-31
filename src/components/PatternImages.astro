@@ -12,9 +12,9 @@ interface Props {
 const { baseName, title, x, y, isDetailPage = false } = Astro.props;
 
 // SVGファイルのパスを生成
-const crossStitchPath = `${import.meta.env.BASE_URL}assets/${baseName}_stitch.svg`;
-const pixelSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pixel.svg`;
-const patternSvgPath = `${import.meta.env.BASE_URL}assets/${baseName}_pattern.svg`;
+const crossStitchPath = `${import.meta.env.BASE_URL}assets/svg/${baseName}_stitch.svg`;
+const pixelSvgPath = `${import.meta.env.BASE_URL}assets/svg/${baseName}_pixel.svg`;
+const patternSvgPath = `${import.meta.env.BASE_URL}assets/svg/${baseName}_pattern.svg`;
 
 // スタイルを条件付きで設定
 const containerStyle = isDetailPage 
