@@ -2,6 +2,8 @@
   <defs>
     <style>
       .pixel { shape-rendering: pixelated; }
+      .stitch { fill: currentColor; }
+      .symbol { font-family: monospace; font-size: 15px; text-anchor: middle; dominant-baseline: middle; }
     </style>
   </defs>
   <rect x="140" y="100" width="20" height="20" fill="#f60e44" stroke="#b4b4b4" class="pixel" />

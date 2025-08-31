@@ -1,7 +1,9 @@
 <svg width="480" height="480" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <style>
+      .pixel { shape-rendering: pixelated; }
       .stitch { fill: currentColor; }
+      .symbol { font-family: monospace; font-size: 15px; text-anchor: middle; dominant-baseline: middle; }
     </style>
   </defs>
   <g fill="#e43b44" stroke="#e43b44" transform="matrix(0.70710678 0.70710678 -0.70710678 0.70710678 170 70)">
