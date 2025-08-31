@@ -17,3 +17,6 @@ pnpm-debug.log*
 
 # original .png
 _png
+
+# grayscale svgs
+_grayscale_svgs
