@@ -50,15 +50,15 @@ async function convertPngFile(filename: string) {
     }
     
     if (svgs.grayscalePixel) {
-      const grayscalePixelPath = join(OUTPUT_DIR, `${baseName}_grayscale_pixel.svg`);
+      const grayscalePixelPath = join(OUTPUT_DIR, `${baseName}_pixel_gray-scale.svg`);
       await writeFile(grayscalePixelPath, svgs.grayscalePixel);
-      console.log(`  Saved: ${baseName}_grayscale_pixel.svg`);
+      console.log(`  Saved: ${baseName}_pixel_gray-scale.svg`);
     }
     
     if (svgs.grayscaleStitch) {
-      const grayscaleStitchPath = join(OUTPUT_DIR, `${baseName}_grayscale_stitch.svg`);
+      const grayscaleStitchPath = join(OUTPUT_DIR, `${baseName}_stitch_gray-scale.svg`);
       await writeFile(grayscaleStitchPath, svgs.grayscaleStitch);
-      console.log(`  Saved: ${baseName}_grayscale_stitch.svg`);
+      console.log(`  Saved: ${baseName}_stitch_gray-scale.svg`);
     }
     
     console.log(`✓ Completed conversion of ${filename}`);
