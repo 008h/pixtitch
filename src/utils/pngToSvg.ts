@@ -86,7 +86,7 @@ export function grayscaleToHex(gray: number): string {
 export function convertPixelsToPixelArtSvg(pixelData: PixelData): string {
   const { width, height, pixels, channels } = pixelData;
   
-  let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">\n`;
+  let svg = `<svg width="480" height="480" xmlns="http://www.w3.org/2000/svg">\n`;
   svg += `  <defs>\n`;
   svg += `    <style>\n`;
   svg += `      .pixel { shape-rendering: pixelated; }\n`;
@@ -105,7 +105,10 @@ export function convertPixelsToPixelArtSvg(pixelData: PixelData): string {
       if (a === 0) continue;
       
       const hex = rgbToHex(r, g, b);
-      svg += `  <rect x="${x}" y="${y}" width="1" height="1" fill="${hex}" class="pixel" />\n`;
+      const pixelSize = 20; // 20x20のピクセルサイズ
+      const pixelX = x * pixelSize;
+      const pixelY = y * pixelSize;
+      svg += `  <rect x="${pixelX}" y="${pixelY}" width="${pixelSize}" height="${pixelSize}" fill="${hex}" class="pixel" />\n`;
     }
   }
   
@@ -119,7 +122,7 @@ export function convertPixelsToPixelArtSvg(pixelData: PixelData): string {
 export function convertPixelsToGrayscalePixelArtSvg(pixelData: PixelData): string {
   const { width, height, pixels, channels } = pixelData;
   
-  let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">\n`;
+  let svg = `<svg width="480" height="480" xmlns="http://www.w3.org/2000/svg">\n`;
   svg += `  <defs>\n`;
   svg += `    <style>\n`;
   svg += `      .pixel { shape-rendering: pixelated; }\n`;
@@ -139,7 +142,10 @@ export function convertPixelsToGrayscalePixelArtSvg(pixelData: PixelData): strin
       
       const gray = rgbToGrayscale(r, g, b);
       const hex = grayscaleToHex(gray);
-      svg += `  <rect x="${x}" y="${y}" width="1" height="1" fill="${hex}" class="pixel" />\n`;
+      const pixelSize = 20; // 20x20のピクセルサイズ
+      const pixelX = x * pixelSize;
+      const pixelY = y * pixelSize;
+      svg += `  <rect x="${pixelX}" y="${pixelY}" width="${pixelSize}" height="${pixelSize}" fill="${hex}" class="pixel" />\n`;
     }
   }
   
@@ -299,10 +305,10 @@ export function convertPixelsToPatternSvg(pixelData: PixelData): string {
     }
   }
   
-  let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
+  let svg = `<svg width="480" height="480" xmlns="http://www.w3.org/2000/svg">\n`;
   svg += `  <defs>\n`;
   svg += `    <style>\n`;
-  svg += `      .symbol { font-family: monospace; font-size: 1.5px; text-anchor: middle; dominant-baseline: middle; }\n`;
+  svg += `      .symbol { font-family: monospace; font-size: 15px; text-anchor: middle; dominant-baseline: middle; }\n`;
   svg += `    </style>\n`;
   svg += `  </defs>\n`;
   
@@ -318,8 +324,9 @@ export function convertPixelsToPatternSvg(pixelData: PixelData): string {
       
       const hex = rgbToHex(r, g, b);
       const symbol = colorToSymbol.get(hex) || '●';
-      const centerX = x * 2 + 1;
-      const centerY = y * 2 + 1;
+      const symbolSize = 20; // 20x20の記号サイズ
+      const centerX = x * symbolSize + symbolSize / 2;
+      const centerY = y * symbolSize + symbolSize / 2;
       
       // 記号の色はすべて#000000（黒）に統一
       svg += `  <text x="${centerX}" y="${centerY}" fill="#000000" class="symbol">${symbol}</text>\n`;
