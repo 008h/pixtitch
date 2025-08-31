@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "concurrently \"astro dev\" \"npm run watch:png\"",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "concurrently": "^9.2.1",
     "daisyui": "^5.0.37",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
