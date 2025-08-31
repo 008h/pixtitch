@@ -152,14 +152,14 @@ export function convertPixelsToGrayscalePixelArtSvg(pixelData: PixelData): strin
  */
 export function convertPixelsToCrossStitchSvg(pixelData: PixelData): string {
   const { width, height, pixels, channels } = pixelData;
-  
-  let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
+
+  let svg = `<svg width="${width * 20}" height="${height * 20}" xmlns="http://www.w3.org/2000/svg">\n`;
   svg += `  <defs>\n`;
   svg += `    <style>\n`;
-  svg += `      .stitch { stroke: #000; stroke-width: 0.1; }\n`;
+  svg += `      .stitch { fill: currentColor; }\n`;
   svg += `    </style>\n`;
   svg += `  </defs>\n`;
-  
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const index = (y * width + x) * channels;
@@ -167,20 +167,27 @@ export function convertPixelsToCrossStitchSvg(pixelData: PixelData): string {
       const g = pixels[index + 1];
       const b = pixels[index + 2];
       const a = channels > 3 ? pixels[index + 3] : 255;
-      
-      // 透明ピクセルはスキップ
+
       if (a === 0) continue;
-      
+
       const hex = rgbToHex(r, g, b);
-      const centerX = x * 2 + 1;
-      const centerY = y * 2 + 1;
-      
-      // クロスステッチのXマークを描画
-      svg += `  <line x1="${centerX - 0.5}" y1="${centerY - 0.5}" x2="${centerX + 0.5}" y2="${centerY + 0.5}" stroke="${hex}" class="stitch" />\n`;
-      svg += `  <line x1="${centerX + 0.5}" y1="${centerY - 0.5}" x2="${centerX - 0.5}" y2="${centerY + 0.5}" stroke="${hex}" class="stitch" />\n`;
+      const centerX = x * 20 + 10;
+      const centerY = y * 20 + 10;
+
+      // クロスステッチ風の×マークを描画（角丸の長方形を45度傾けたものを二つ重ねる）
+      // 左上から右下への斜線（45度）
+      svg += `  <g fill="${hex}" stroke="${hex}" transform="matrix(0.70710678 0.70710678 -0.70710678 0.70710678 ${centerX} ${centerY})">\n`;
+      svg += `    <path d="m7.4-3.6c2.4 0 3.6 1.2 3.6 3.6s-1.2 3.6-3.6 3.6h-14.8c-2.4 0-3.6-1.2-3.6-3.6s1.2-3.6 3.6-3.6z" stroke="none"/>\n`;
+      svg += `    <path d="m7.4-3.6c2.4 0 3.6 1.2 3.6 3.6s-1.2 3.6-3.6 3.6h-14.8c-2.4 0-3.6-1.2-3.6-3.6s1.2-3.6 3.6-3.6z" fill="none" stroke="#fff"/>\n`;
+      svg += `  </g>\n`;
+      // 右上から左下への斜線（-45度）
+      svg += `  <g fill="${hex}" stroke="#fff" transform="matrix(0.70710678 -0.70710678 0.70710678 0.70710678 ${centerX} ${centerY})">\n`;
+      svg += `    <path d="m7.4-3.6c2.4 0 3.6 1.2 3.6 3.6s-1.2 3.6-3.6 3.6h-14.8c-2.4 0-3.6-1.2-3.6-3.6s1.2-3.6 3.6-3.6z" stroke="none"/>\n`;
+      svg += `    <path d="m7.4-3.6c2.4 0 3.6 1.2 3.6 3.6s-1.2 3.6-3.6 3.6h-14.8c-2.4 0-3.6-1.2-3.6-3.6s1.2-3.6 3.6-3.6z" fill="none" stroke="#fff"/>\n`;
+      svg += `  </g>\n`;
     }
   }
-  
+
   svg += '</svg>';
   return svg;
 }
@@ -190,14 +197,14 @@ export function convertPixelsToCrossStitchSvg(pixelData: PixelData): string {
  */
 export function convertPixelsToGrayscaleCrossStitchSvg(pixelData: PixelData): string {
   const { width, height, pixels, channels } = pixelData;
-  
-  let svg = `<svg width="${width * 2}" height="${height * 2}" xmlns="http://www.w3.org/2000/svg">\n`;
+
+  let svg = `<svg width="${width * 20}" height="${height * 20}" xmlns="http://www.w3.org/2000/svg">\n`;
   svg += `  <defs>\n`;
   svg += `    <style>\n`;
-  svg += `      .stitch { stroke: #000; stroke-width: 0.1; }\n`;
+  svg += `      .stitch { fill: currentColor; }\n`;
   svg += `    </style>\n`;
   svg += `  </defs>\n`;
-  
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const index = (y * width + x) * channels;
@@ -205,21 +212,28 @@ export function convertPixelsToGrayscaleCrossStitchSvg(pixelData: PixelData): st
       const g = pixels[index + 1];
       const b = pixels[index + 2];
       const a = channels > 3 ? pixels[index + 3] : 255;
-      
-      // 透明ピクセルはスキップ
+
       if (a === 0) continue;
-      
-      const gray = rgbToGrayscale(r, g, b);
-      const hex = grayscaleToHex(gray);
-      const centerX = x * 2 + 1;
-      const centerY = y * 2 + 1;
-      
-      // クロスステッチのXマークを描画
-      svg += `  <line x1="${centerX - 0.5}" y1="${centerY - 0.5}" x2="${centerX + 0.5}" y2="${centerY + 0.5}" stroke="${hex}" class="stitch" />\n`;
-      svg += `  <line x1="${centerX + 0.5}" y1="${centerY - 0.5}" x2="${centerX - 0.5}" y2="${centerY + 0.5}" stroke="${hex}" class="stitch" />\n`;
+
+      const grayscale = rgbToGrayscale(r, g, b);
+      const hex = grayscaleToHex(grayscale);
+      const centerX = x * 20 + 10;
+      const centerY = y * 20 + 10;
+
+      // クロスステッチ風の×マークを描画（角丸の長方形を45度傾けたものを二つ重ねる）
+      // 左上から右下への斜線（45度）
+      svg += `  <g fill="${hex}" stroke="${hex}" transform="matrix(0.70710678 0.70710678 -0.70710678 0.70710678 ${centerX} ${centerY})">\n`;
+      svg += `    <path d="m7.4-3.6c2.4 0 3.6 1.2 3.6 3.6s-1.2 3.6-3.6 3.6h-14.8c-2.4 0-3.6-1.2-3.6-3.6s1.2-3.6 3.6-3.6z" stroke="none"/>\n`;
+      svg += `    <path d="m7.4-3.6c2.4 0 3.6 1.2 3.6 3.6s-1.2 3.6-3.6 3.6h-14.8c-2.4 0-3.6-1.2-3.6-3.6s1.2-3.6 3.6-3.6z" fill="none" stroke="#fff"/>\n`;
+      svg += `  </g>\n`;
+      // 右上から左下への斜線（-45度）
+      svg += `  <g fill="${hex}" stroke="#fff" transform="matrix(0.70710678 -0.70710678 0.70710678 0.70710678 ${centerX} ${centerY})">\n`;
+      svg += `    <path d="m7.4-3.6c2.4 0 3.6 1.2 3.6 3.6s-1.2 3.6-3.6 3.6h-14.8c-2.4 0-3.6-1.2-3.6-3.6s1.2-3.6 3.6-3.6z" stroke="none"/>\n`;
+      svg += `    <path d="m7.4-3.6c2.4 0 3.6 1.2 3.6 3.6s-1.2 3.6-3.6 3.6h-14.8c-2.4 0-3.6-1.2-3.6-3.6s1.2-3.6 3.6-3.6z" fill="none" stroke="#fff"/>\n`;
+      svg += `  </g>\n`;
     }
   }
-  
+
   svg += '</svg>';
   return svg;
 }
